@@ -50,7 +50,8 @@ public class UserController {
     }
     //로그인 진행 -  비밀번호 틀릴시 팝업
     @PostMapping("/login")
-    public String login(@ModelAttribute User user, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String login(@ModelAttribute User user, HttpSession session, RedirectAttributes redirectAttributes
+    ) {
         User foundUser = userService.findUserByUserName(user.getUsername());
         if (foundUser != null && user.getPassword().equals(foundUser.getPassword())) {
             session.setAttribute("username", foundUser.getUsername());

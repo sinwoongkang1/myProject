@@ -15,7 +15,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username")
+    @JoinColumn(name = "username")
     private String username;
 
     @Column(name = "email")
@@ -38,6 +38,9 @@ public class User {
 
     @Column(name = "regi_date")
     private Date regiDate;
+
+    @Column(name = "user_image")
+    private String userImage;
 
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
