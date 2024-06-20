@@ -14,10 +14,19 @@ public class Admin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "authority")
-    private boolean authority;
+    @Column(name = "admin")
+    private boolean admin;
+
+    @Column(name = "username")
+    private String username;
 
     @OneToOne
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id")
     private User user;
+
+    public Admin(User user) {
+        this.user = user;
+        this.admin = false;
+        this.username = user.getUsername();
+    }
 }

@@ -2,13 +2,13 @@ package com.example.myproject.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Date;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Table(name = "user")
 public class User {
     @Id
@@ -24,12 +24,28 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "favorite_country")
-    private String favoriteCountry;
+    @Column(name = "wanted_weight")
+    private Integer wantedWeight;
 
-    @Column(name = "predicted_winner")
-    private String predictedWinner;
+    @Column(name = "cal")
+    private Integer cal;
 
-    @OneToOne(mappedBy = "user")
-    private Admin admin;
+    @Column(name = "liked")
+    private Integer liked;
+
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "regi_date")
+    private Date regiDate;
+
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Admin adminDetails;
+
+    public User() {
+        this.liked = 0;
+        this.cal = 10000;
+        this.regiDate = new Date();
+    }
 }
