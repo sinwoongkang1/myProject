@@ -52,7 +52,7 @@
         .container {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
+            justify-content: flex-start;
             padding: 20px;
             z-index: 1;
         }
@@ -109,17 +109,20 @@
         <a th:if="${session.username != null}" href="http://localhost:8080/BBelog/logout" onclick="confirmLogout(event)">로그아웃</a>
         <a th:if="${session.username != null}" href="http://localhost:8080/BBelog/profile">내 정보</a>
     </div>
-
 </header>
+
 <div class="container">
-    <div th:each="board : ${boards}" class="card" th:if="${__counter__ < 5}">
-        <h2 th:text="${board.title}">제목</h2>
-        <p th:text="${board.content}">내용</p>
-        <div class="meta-info">
-            <span th:text="${board.user.username}">작성자</span>
-            <span th:text="${board.writeTime}">2024-06-21</span>
+    <!-- boards를 역순으로 반복 -->
+    <div id="sortedCards" style="display: flex; flex-wrap: wrap; justify-content: flex-start;">
+        <div th:each="board : ${boards}" class="card" th:if="${__counter__ < 5}">
+            <h2 th:text="${board.title}">제목</h2>
+            <p th:text="${board.content}">내용</p>
+            <div class="meta-info">
+                <span th:text="${board.user.username}">작성자</span>
+                <span th:text="${board.writeTime}">2024-06-21 13:37:39.437</span>
+            </div>
+            <a href="#">자세히 보기</a>
         </div>
-        <a href="#">자세히 보기</a>
     </div>
 </div>
 
@@ -129,6 +132,34 @@
         if (confirm("정말 로그아웃 하시겠습니까?")) {
             window.location.href = "/BBelog/logout";
         }
+    }
+
+    // DOM 로딩 후 실행
+    document.addEventListener("DOMContentLoaded", function () {
+        // 게시물 정렬 함수 호출
+        sortCardsByDate();
+    });
+
+    // 게시물 정렬 함수
+    function sortCardsByDate() {
+        // 카드 요소들을 가져옴
+        const cardsContainer = document.getElementById('sortedCards');
+        const cards = cardsContainer.querySelectorAll('.card');
+
+        // 카드를 배열로 변환
+        const cardsArray = Array.from(cards);
+
+        // 정렬 - 최신 작성 시간 순서로
+        cardsArray.sort(function (a, b) {
+            const dateA = new Date(a.querySelector('.meta-info span:nth-child(2)').textContent.trim());
+            const dateB = new Date(b.querySelector('.meta-info span:nth-child(2)').textContent.trim());
+            return dateB - dateA; // 내림차순 정렬
+        });
+
+        // 정렬된 카드를 화면에 추가
+        cardsArray.forEach(function (card) {
+            cardsContainer.appendChild(card);
+        });
     }
 </script>
 

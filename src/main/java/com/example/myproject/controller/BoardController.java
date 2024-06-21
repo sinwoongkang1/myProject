@@ -8,10 +8,10 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @Controller
@@ -30,7 +30,6 @@ public class BoardController {
     public String write(@ModelAttribute Board board, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         String username = null;
-
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("username".equals(cookie.getName())) {
@@ -52,4 +51,43 @@ public class BoardController {
             return "redirect:/BBelog/login";
         }
     }
+    @PostMapping("/saveTemporary")
+    public String saveTemporary(@RequestBody Board board, HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        String username = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("username".equals(cookie.getName())) {
+                    username = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        if (username != null) {
+            User user = userService.findUserByUserName(username);
+            if (user != null) {
+                board.setUser(user);
+                boardService.saveTemporary(board, username);
+                return "redirect:/board/temporary";
+            } else {
+                return "redirect:/BBelog/login";
+            }
+        } else {
+            return "redirect:/BBelog/login";
+        }
+    }
+
+
+    @GetMapping("/temporary")
+    public String getTemporaryBoards(Model model,@CookieValue(value = "username", defaultValue = "") String username) {
+        if (username.isEmpty()) {
+            return "redirect:/BBelog/login";
+        }
+        User user = userService.findUserByUserName(username);
+        List<Board> temporaryBoards = boardService.findByBoardUserAndTemporaryTrue(user);
+        model.addAttribute("user", user);
+        model.addAttribute("boards", temporaryBoards);
+        return "temporary";
+    }
 }
+

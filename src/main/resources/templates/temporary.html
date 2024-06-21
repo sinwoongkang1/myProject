@@ -129,6 +129,19 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        .board-card .meta-info {
+            font-size: 14px;
+            color: #999;
+            margin-top: 10px;
+        }
+        .board-card a {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -154,8 +167,7 @@
 
         <div class="buttons">
             <a href="http://localhost:8080/BBelog">홈으로</a>
-            <a href="http://localhost:8080/BBelog/temporary">임시저장글 보기</a>
-            <a href="http://localhost:8080/BBelog/write">글쓰기</a>
+            <a href="http://localhost:8080/BBelog/profile">프로필</a>
         </div>
     </div>
 
@@ -163,7 +175,11 @@
         <div th:each="board : ${boards}" class="board-card">
             <h3 th:text="${board.title}">제목</h3>
             <p th:text="${board.content}">내용</p>
-            <p class="meta-info">작성일: <span th:text="${#dates.format(board.writeTime, 'yyyy-MM-dd')}">2023-01-01</span></p>
+            <div class="meta-info">
+                작성자: <span th:text="${board.user.username}">작성자</span><br>
+                작성일자: <span th:text="${board.writeTime}">2024-06-21</span>
+            </div>
+            <a href="#">자세히 보기</a>
         </div>
     </div>
 </div>

@@ -30,7 +30,7 @@ public class UserController {
 
     @GetMapping
     public String BBelogIndex(Model model) {
-        List<Board> boards = boardService.findAll();
+        List<Board> boards = boardService.findByTemporaryFalse();
         model.addAttribute("boards", boards);
         return "BBelog";
     }
@@ -81,7 +81,7 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public String profile(Model model, @CookieValue(value = "username", defaultValue = "") String username, HttpServletRequest request) {
+    public String profile(Model model, @CookieValue(value = "username", defaultValue = "") String username) {
         if (username.isEmpty()) {
             return "redirect:/BBelog/login";
         }
@@ -89,7 +89,7 @@ public class UserController {
         if (user == null) {
             return "redirect:/BBelog";
         }
-            List<Board> boards = boardService.findBoardByUser(user);
+            List<Board> boards = boardService.findByBoardUserAndTemporaryFalse(user);
             model.addAttribute("user", user);
             model.addAttribute("boards", boards);
             return "profile";
