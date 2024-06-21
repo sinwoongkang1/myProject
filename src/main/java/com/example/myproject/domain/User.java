@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -15,7 +16,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "username")
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
     @Column(name = "email")
@@ -41,6 +42,9 @@ public class User {
 
     @Column(name = "user_image")
     private String userImage;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Board> boards;
 
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)

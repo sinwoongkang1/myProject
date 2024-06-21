@@ -2,7 +2,6 @@ package com.example.myproject.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
@@ -11,7 +10,6 @@ import java.util.Date;
 @Table(name = "board")
 @Getter
 @Setter
-
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +19,7 @@ public class Board {
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn (name = "username")
+    @JoinColumn(name = "username", referencedColumnName = "username", nullable = false)
     private User user;
 
     @Column(name = "password")
@@ -45,7 +43,12 @@ public class Board {
     @Column(name = "write_time")
     private Date writeTime;
 
+    @Column(name = "temporary")
+    private boolean temporary;
+
     public Board() {
+        this.liked = 0;
         this.writeTime = new Date();
+        this.temporary = false;
     }
 }

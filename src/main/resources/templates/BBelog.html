@@ -40,6 +40,15 @@
             font-size: 16px;
             text-decoration: none;
         }
+        .header .additional-links {
+            display: flex;
+            align-items: center;
+        }
+        .header .additional-links span {
+            margin-right: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
         .container {
             display: flex;
             flex-wrap: wrap;
@@ -54,8 +63,12 @@
             margin: 10px;
             padding: 20px;
             width: 300px;
+            height: 360px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .card h2 {
             font-size: 18px;
@@ -64,6 +77,7 @@
         .card p {
             font-size: 14px;
             color: #555;
+            flex-grow: 1;
         }
         .card a {
             text-decoration: none;
@@ -72,11 +86,16 @@
             font-size: 14px;
             display: block;
             margin-top: 10px;
+            align-self: flex-end;
         }
         .card .meta-info {
             font-size: 12px;
             color: #999;
             margin-top: 10px;
+        }
+        .card .meta-info span {
+            display: block;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -90,33 +109,15 @@
         <a th:if="${session.username != null}" href="http://localhost:8080/BBelog/logout" onclick="confirmLogout(event)">로그아웃</a>
         <a th:if="${session.username != null}" href="http://localhost:8080/BBelog/profile">내 정보</a>
     </div>
-</header>
 
+</header>
 <div class="container">
-    <div class="card">
-        <h2>어제의 운동 정리</h2>
-        <p>푸쉬업 100개, 5kg 중량 싯업 100개, 5km 러닝 25분 이내</p>
+    <div th:each="board : ${boards}" class="card" th:if="${__counter__ < 5}">
+        <h2 th:text="${board.title}">제목</h2>
+        <p th:text="${board.content}">내용</p>
         <div class="meta-info">
-            작성자: <span class="author-id">사용자1</span><br>
-            작성일자: <span class="posted-date">2024-06-19</span>
-        </div>
-        <a href="#">자세히 보기</a>
-    </div>
-    <div class="card">
-        <h2>오늘의 운동 정리</h2>
-        <p>데드리프트, 바벨로우, 케이블 시티드 로우</p>
-        <div class="meta-info">
-            작성자: <span class="author-id">사용자2</span><br>
-            작성일자: <span class="posted-date">2024-06-20</span>
-        </div>
-        <a href="#">자세히 보기</a>
-    </div>
-    <div class="card">
-        <h2>오늘의 식단</h2>
-        <p>감자200g 당근,오이,토마토 마음껏, 계란과 닭가슴살</p>
-        <div class="meta-info">
-            작성자: <span class="author-id">사용자3</span><br>
-            작성일자: <span class="posted-date">2024-06-21</span>
+            <span th:text="${board.user.username}">작성자</span>
+            <span th:text="${board.writeTime}">2024-06-21</span>
         </div>
         <a href="#">자세히 보기</a>
     </div>
@@ -125,7 +126,7 @@
 <script>
     function confirmLogout(event) {
         event.preventDefault();
-        if (confirm("정말 로그아웃 하시겠습니까??")) {
+        if (confirm("정말 로그아웃 하시겠습니까?")) {
             window.location.href = "/BBelog/logout";
         }
     }

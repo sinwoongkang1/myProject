@@ -1,9 +1,14 @@
 package com.example.myproject.controller;
 
 import com.example.myproject.domain.Admin;
+import com.example.myproject.domain.Board;
 import com.example.myproject.domain.User;
 import com.example.myproject.service.AdminService;
+import com.example.myproject.service.BoardService;
 import com.example.myproject.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -12,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.List;
 
 
 @Controller
@@ -20,17 +26,20 @@ import java.security.Principal;
 public class UserController {
     private final UserService userService;
     private final AdminService adminService;
+    private final BoardService boardService;
 
     @GetMapping
-    public String BBelogIndex() {
+    public String BBelogIndex(Model model) {
+        List<Board> boards = boardService.findAll();
+        model.addAttribute("boards", boards);
         return "BBelog";
     }
-    @GetMapping("/join")
 
+    @GetMapping("/join")
     public String join() {
         return "join";
     }
-    //회원가입 진행 - 같은 아이디 존재 확인, 비밀번호 동일하게 입력 확인(JS)
+
     @PostMapping("/join")
     public String join(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
         if (userService.existsByUsername(user.getUsername())) {
@@ -48,12 +57,15 @@ public class UserController {
     public String login() {
         return "login";
     }
-    //로그인 진행 -  비밀번호 틀릴시 팝업
+
     @PostMapping("/login")
     public String login(@ModelAttribute User user, HttpSession session, RedirectAttributes redirectAttributes
-    ) {
+    ,HttpServletResponse response) {
         User foundUser = userService.findUserByUserName(user.getUsername());
         if (foundUser != null && user.getPassword().equals(foundUser.getPassword())) {
+            Cookie cookie = new Cookie("username", foundUser.getUsername());
+            cookie.setPath("/");
+            response.addCookie(cookie);
             session.setAttribute("username", foundUser.getUsername());
             return "redirect:/BBelog";
         } else {
@@ -69,15 +81,27 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public String profile(Model model, Principal principal, HttpSession session) {
-        String username = principal.getName();
+    public String profile(Model model, @CookieValue(value = "username", defaultValue = "") String username, HttpServletRequest request) {
+        if (username.isEmpty()) {
+            return "redirect:/BBelog/login";
+        }
         User user = userService.findUserByUserName(username);
         if (user == null) {
-            return "redirect:/profile";
-        } else {
-            session.setAttribute("loggedInUser", user);
-            model.addAttribute("user", user);
-            return "profile";
+            return "redirect:/BBelog";
         }
+            List<Board> boards = boardService.findBoardByUser(user);
+            model.addAttribute("user", user);
+            model.addAttribute("boards", boards);
+            return "profile";
+
     }
-    }
+
+
+
+
+
+
+}
+
+
+
