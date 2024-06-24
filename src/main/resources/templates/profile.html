@@ -164,6 +164,7 @@
             <h3 th:text="${board.title}">제목</h3>
             <p th:text="${board.content}">내용</p>
             <p class="meta-info">작성일: <span th:text="${#dates.format(board.writeTime, 'yyyy-MM-dd')}">2023-01-01</span></p>
+            <a th:href="@{/BBelog/profile/{username}/{id}(username=${board.user.username}, id=${board.id})}">자세히 보기</a>
         </div>
     </div>
 </div>

@@ -19,6 +19,7 @@ public class BoardService {
         boardRepository.save(board);
     }
 
+
     public Board findBoardByTitle(String title) {
         return boardRepository.findByTitle(title);
     }
@@ -26,9 +27,12 @@ public class BoardService {
     public List<Board> findBoardByUser(User user) {
         return boardRepository.findBoardByUser(user);
     }
-
     public List<Board> findAll(){
         return boardRepository.findAll();
+    }
+
+    public Board findByUsernameAndBoardIdAndTemporaryFalse(String username,Long id) {
+        return boardRepository.findByUsernameAndBoardIdAndTemporaryFalse(username,id);
     }
 
     public List<Board> findByTemporaryFalse(){
@@ -52,5 +56,13 @@ public class BoardService {
     }
     public List<Board> findByBoardUserAndTemporaryTrue(User user) {
         return boardRepository.findBoardByUserAndTemporaryTrue(user);
+    }
+
+    public void deleteBoard(Board board) {
+        boardRepository.delete(board);
+    }
+
+    public Board UpdateBoard(Board board) {
+        return boardRepository.save(board);
     }
 }

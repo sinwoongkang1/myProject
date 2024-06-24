@@ -6,11 +6,13 @@ import com.example.myproject.service.BoardService;
 import com.example.myproject.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -39,7 +41,7 @@ public class BoardController {
             }
         }
         if (username != null) {
-            User user = userService.findUserByUserName(username);
+            User user = userService.findUserByUsername(username);
             if (user != null) {
                 board.setUser(user);
                 boardService.save(board);
@@ -64,7 +66,7 @@ public class BoardController {
             }
         }
         if (username != null) {
-            User user = userService.findUserByUserName(username);
+            User user = userService.findUserByUsername(username);
             if (user != null) {
                 board.setUser(user);
                 boardService.saveTemporary(board, username);
@@ -83,11 +85,77 @@ public class BoardController {
         if (username.isEmpty()) {
             return "redirect:/BBelog/login";
         }
-        User user = userService.findUserByUserName(username);
+        User user = userService.findUserByUsername(username);
         List<Board> temporaryBoards = boardService.findByBoardUserAndTemporaryTrue(user);
         model.addAttribute("user", user);
         model.addAttribute("boards", temporaryBoards);
         return "temporary";
     }
+
+    @GetMapping("/profile/{username}/{id}")
+    public String profile(@PathVariable String username, @PathVariable Long id,
+                          @CookieValue(value = "username", defaultValue = "") String cookieUsername,
+                          Model model) {
+        User user = userService.findUserByUsername(username);
+        Board board = boardService.findByUsernameAndBoardIdAndTemporaryFalse(username,id);
+        model.addAttribute("user", user);
+        model.addAttribute("id", id);
+        model.addAttribute("board", board);
+
+        if (username.equals(cookieUsername)) {
+            return "board_writed_me";
+        } else {
+            return "board_writed";
+        }
+    }
+    @PostMapping("/delete/{username}/{id}")
+    public String deletePost(@PathVariable String username, @PathVariable Long id, HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        User user = userService.findUserByUsername(username);
+        String cookieUsername = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("username")) {
+                    cookieUsername = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        if (username.equals(cookieUsername)) {
+            Board board = boardService.findByUsernameAndBoardIdAndTemporaryFalse(username,id);
+            if (board != null) {
+                boardService.deleteBoard(board);
+            }
+        }
+        return "redirect:/BBelog";
+    }
+
+    @GetMapping("/update/{username}/{id}")
+    public String updatePost(@PathVariable String username, @PathVariable Long id, Model model) {
+        User user = userService.findUserByUsername(username);
+        Board board = boardService.findByUsernameAndBoardIdAndTemporaryFalse(username,id);
+        model.addAttribute("user", user);
+        model.addAttribute("id", id);
+        model.addAttribute("board", board);
+        return "edit";
+    }
+
+    @PostMapping("/update/{username}/{id}")
+    public String update(@PathVariable String username,
+                         @PathVariable Long id,
+                         @RequestParam String title,
+                         @RequestParam String content,
+                         Model model) {
+        Board board = boardService.findByUsernameAndBoardIdAndTemporaryFalse(username, id);
+        if (board != null) {
+            board.setTitle(title);
+            board.setContent(content);
+            board.setWriteTime(new Date());
+            boardService.save(board);
+        }
+        return "redirect:/BBelog";
+    }
+
 }
+
 

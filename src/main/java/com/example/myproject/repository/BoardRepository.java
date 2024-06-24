@@ -2,7 +2,11 @@ package com.example.myproject.repository;
 
 import com.example.myproject.domain.Board;
 import com.example.myproject.domain.User;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,4 +22,12 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findByTemporaryTrue();
     List<Board> findBoardByUserAndTemporaryFalse(User user);
     List<Board> findBoardByUserAndTemporaryTrue(User user);
+
+    @Query("SELECT b FROM Board b WHERE b.user.username = :username AND b.id = :id AND b.temporary = false")
+    Board findByUsernameAndBoardIdAndTemporaryFalse(@Param("username") String username, @Param("id") Long id);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Board b WHERE b.user.username = :username")
+    void deleteBoardByUsername(@Param("username") String username);
 }

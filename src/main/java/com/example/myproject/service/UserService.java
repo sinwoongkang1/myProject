@@ -18,7 +18,7 @@ public class UserService {
     }
 
     //DB에 있는 user 이름으로 찾기
-    public User findUserByUserName(String username) {
+    public User findUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 

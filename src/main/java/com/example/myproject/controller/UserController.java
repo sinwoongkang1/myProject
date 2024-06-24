@@ -61,7 +61,7 @@ public class UserController {
     @PostMapping("/login")
     public String login(@ModelAttribute User user, HttpSession session, RedirectAttributes redirectAttributes
     ,HttpServletResponse response) {
-        User foundUser = userService.findUserByUserName(user.getUsername());
+        User foundUser = userService.findUserByUsername(user.getUsername());
         if (foundUser != null && user.getPassword().equals(foundUser.getPassword())) {
             Cookie cookie = new Cookie("username", foundUser.getUsername());
             cookie.setPath("/");
@@ -85,7 +85,7 @@ public class UserController {
         if (username.isEmpty()) {
             return "redirect:/BBelog/login";
         }
-        User user = userService.findUserByUserName(username);
+        User user = userService.findUserByUsername(username);
         if (user == null) {
             return "redirect:/BBelog";
         }
