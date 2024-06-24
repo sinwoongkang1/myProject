@@ -35,6 +35,10 @@ public class BoardService {
         return boardRepository.findByUsernameAndBoardIdAndTemporaryFalse(username,id);
     }
 
+    public Board findByUsernameAndBoardIdAndTemporaryTrue(String username,Long id) {
+        return boardRepository.findByUsernameAndBoardIdAndTemporaryTrue(username,id);
+    }
+
     public List<Board> findByTemporaryFalse(){
         return boardRepository.findByTemporaryFalse();
     }

@@ -53,6 +53,7 @@ public class BoardController {
             return "redirect:/BBelog/login";
         }
     }
+
     @PostMapping("/saveTemporary")
     public String saveTemporary(@RequestBody Board board, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
@@ -81,7 +82,7 @@ public class BoardController {
 
 
     @GetMapping("/temporary")
-    public String getTemporaryBoards(Model model,@CookieValue(value = "username", defaultValue = "") String username) {
+    public String getTemporaryBoards(Model model, @CookieValue(value = "username", defaultValue = "") String username) {
         if (username.isEmpty()) {
             return "redirect:/BBelog/login";
         }
@@ -97,7 +98,7 @@ public class BoardController {
                           @CookieValue(value = "username", defaultValue = "") String cookieUsername,
                           Model model) {
         User user = userService.findUserByUsername(username);
-        Board board = boardService.findByUsernameAndBoardIdAndTemporaryFalse(username,id);
+        Board board = boardService.findByUsernameAndBoardIdAndTemporaryFalse(username, id);
         model.addAttribute("user", user);
         model.addAttribute("id", id);
         model.addAttribute("board", board);
@@ -108,6 +109,7 @@ public class BoardController {
             return "board_writed";
         }
     }
+
     @PostMapping("/delete/{username}/{id}")
     public String deletePost(@PathVariable String username, @PathVariable Long id, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
@@ -122,7 +124,7 @@ public class BoardController {
             }
         }
         if (username.equals(cookieUsername)) {
-            Board board = boardService.findByUsernameAndBoardIdAndTemporaryFalse(username,id);
+            Board board = boardService.findByUsernameAndBoardIdAndTemporaryFalse(username, id);
             if (board != null) {
                 boardService.deleteBoard(board);
             }
@@ -133,7 +135,7 @@ public class BoardController {
     @GetMapping("/update/{username}/{id}")
     public String updatePost(@PathVariable String username, @PathVariable Long id, Model model) {
         User user = userService.findUserByUsername(username);
-        Board board = boardService.findByUsernameAndBoardIdAndTemporaryFalse(username,id);
+        Board board = boardService.findByUsernameAndBoardIdAndTemporaryFalse(username, id);
         model.addAttribute("user", user);
         model.addAttribute("id", id);
         model.addAttribute("board", board);
@@ -156,6 +158,69 @@ public class BoardController {
         return "redirect:/BBelog";
     }
 
+    @GetMapping("/temporary/{username}/{id}")
+    public String temporary(@PathVariable String username, @PathVariable Long id, Model model) {
+        User user = userService.findUserByUsername(username);
+        Board board = boardService.findByUsernameAndBoardIdAndTemporaryTrue(username, id);
+        model.addAttribute("user", user);
+        model.addAttribute("id", id);
+        model.addAttribute("board", board);
+        return "wirted_temporary";
+    }
+
+    @PostMapping("/temporary/delete/{username}/{id}")
+    public String temporaryDelete(@PathVariable String username, @PathVariable Long id, Model model) {
+        User user = userService.findUserByUsername(username);
+        Board board = boardService.findByUsernameAndBoardIdAndTemporaryTrue(username, id);
+        if (board != null) {
+            boardService.deleteBoard(board);
+        }
+        return "redirect:/BBelog/temporary";
+    }
+
+    @GetMapping("/temporary/update/{username}/{id}")
+    public String temporaryUpdate(@PathVariable String username, @PathVariable Long id, Model model) {
+        Board board = boardService.findByUsernameAndBoardIdAndTemporaryTrue(username, id);
+        if (board == null) {
+            return "error";
+        }
+        model.addAttribute("board", board);
+        return "temporary_edit";
+    }
+
+    @PostMapping("/temporary/update/{username}/{id}")
+    public String temporaryUpdate(@PathVariable String username,
+                                  @PathVariable Long id,
+                                  @RequestParam String title,
+                                  @RequestParam String content,
+                                  Model model) {
+        Board board = boardService.findByUsernameAndBoardIdAndTemporaryTrue(username, id);
+        if (board != null) {
+            board.setTitle(title);
+            board.setContent(content);
+            board.setWriteTime(new Date());
+            boardService.save(board);
+        }
+        return "redirect:/BBelog/temporary";
+    }
+
+    @PostMapping("/temporary/push/{username}/{id}")
+    public String temporaryPush(@PathVariable String username,
+                                @PathVariable Long id,
+                                @RequestParam String title,
+                                @RequestParam String content,
+                                Model model) {
+        Board board = boardService.findByUsernameAndBoardIdAndTemporaryTrue(username, id);
+            board.setTitle(title);
+            board.setContent(content);
+            board.setTemporary(false);
+            board.setWriteTime(new Date());
+            boardService.save(board);
+
+            model.addAttribute("board",board);
+            model.addAttribute("username", username);
+            model.addAttribute("id", id);
+
+        return "redirect:/profile";
+    }
 }
-
-

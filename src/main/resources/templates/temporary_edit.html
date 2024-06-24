@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Form</title>
+</head>
+<body>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>임시 저장글 수정하기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: auto;
+            padding: 0;
+            background: url('https://www.pngitem.com/pimgs/m/105-1052152_before-and-after-silhouettes-before-and-after-weight.png') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+        }
+        .header {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header .logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+        .header .right-links {
+            display: flex;
+            align-items: center;
+        }
+        .header .right-links a {
+            margin-left: 10px;
+            background-color: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 80vh;
+            padding: 20px;
+            z-index: 1;
+        }
+        .card {
+            background-color: #f8f9fa;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .card p {
+            font-size: 18px;
+            color: #555;
+            text-align: left;
+            margin-bottom: 10px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .buttons a {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            margin: 10px 1px;
+            flex: 1;
+        }
+        .buttons a:hover {
+            background-color: #0056b3;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-size: 18px;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .form-group input[type="text"],
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .attach-button {
+            margin-top: 10px;
+            padding: 8px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .attach-button:hover {
+            background-color: #0056b3;
+        }
+        .publish-button {
+            margin-top: 10px;
+            padding: 8px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .publish-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <a href="http://localhost:8080/BBelog" class="logo">BBelog</a>
+    <div class="right-links">
+        <a th:if="${session.username == null}" href="http://localhost:8080/BBelog/join">회원가입</a>
+        <a th:if="${session.username == null}" href="http://localhost:8080/BBelog/login">로그인</a>
+        <a th:if="${session.username != null}" href="http://localhost:8080/BBelog/logout" onclick="confirmLogout(event)">로그아웃</a>
+        <a th:if="${session.username != null}" href="http://localhost:8080/BBelog/profile">내 정보</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h2>임시 저장 글 수정하기</h2>
+
+        <form id="updateForm" th:action="@{/BBelog/temporary/update/{username}/{id}(username=${board.user.username}, id=${board.id})}" method="post">
+            <input type="hidden" id="username" name="username" th:value="${session.username}">
+            <div class="form-group">
+                <label for="title">제목:</label>
+                <input type="text" id="title" name="title" th:value="${board.title}">
+            </div>
+            <div class="form-group">
+                <label for="content">내용:</label>
+                <textarea id="content" name="content" rows="4" cols="50" th:text="${board.content}">${board.content}</textarea>
+            </div>
+            <button class="attach-button" type="button" onclick="window.location.href='http://localhost:8080/BBelog'">홈으로</button>
+            <button class="attach-button" type="submit">수정 하기</button>
+            <button class="publish-button" type="button" onclick="publishForm()">출간 하기</button>
+        </form>
+
+        <script>
+            function publishForm() {
+                document.getElementById('updateForm').action = '/BBelog/temporary/push/${board.user.username}/${board.id}';
+                document.getElementById('updateForm').submit();
+            }
+        </script>
+
+
+    </div>
+</div>
+<script>
+    function saveTemporary() {
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+        const username = document.getElementById('username').value;
+
+        fetch('/BBelog/saveTemporary', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ title, content, username }),  // username 포함
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/BBelog/temporary';
+                } else {
+                    alert('임시 저장에 성공했습니다.')
+                    window.location.href = '/BBelog/temporary';
+                }
+            });
+    }
+    function confirmLogout(event) {
+        event.preventDefault();
+        if (confirm("정말 로그아웃 하시겠습니까?")) {
+            window.location.href = "/BBelog/logout";
+        }
+    }
+</script>
+
+</body>
+</html>

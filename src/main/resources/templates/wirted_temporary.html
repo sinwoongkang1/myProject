@@ -53,6 +53,7 @@
             border-radius: 8px;
             padding: 20px;
             width: 600px;
+            height: auto;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
             position: relative;
@@ -86,7 +87,7 @@
             width: 100%;
             margin-top: 20px;
         }
-        .buttons a {
+        .buttons a, .buttons button {
             padding: 10px 40px;
             background-color: #555;
             color: white;
@@ -94,53 +95,32 @@
             border-radius: 5px;
             transition: background-color 0.3s;
             margin: 10px 1px;
+            border: none;
+            display: inline-block;
+            text-align: center;
         }
-        .buttons a:hover {
+        .buttons a:hover, .buttons button:hover {
             background-color: #333;
         }
-        .board-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center; /* 중앙 정렬로 수정 */
-            gap: 20px; /* 간격 추가 */
-            width: 100%;
+        .posts-container {
+            text-align: center;
             margin-top: 20px;
         }
-        .board-card {
+        .post {
             background-color: #f8f9fa;
             border: 1px solid #ccc;
             border-radius: 8px;
             padding: 15px;
-            width: calc(25% - 20px); /* 너비 계산 부분 수정 */
-            margin-bottom: 20px;
-            box-sizing: border-box;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        .board-card h3 {
+        .post h3 {
             font-size: 20px;
             margin-bottom: 10px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
-        .board-card p {
+        .post p {
             font-size: 16px;
             color: #555;
-            height: 60px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .board-card .meta-info {
-            font-size: 14px;
-            color: #999;
-            margin-top: 10px;
-        }
-        .board-card a {
-            display: block;
-            text-align: center;
-            margin-top: 10px;
-            color: #007BFF;
-            text-decoration: none;
-            font-weight: bold;
         }
     </style>
 </head>
@@ -159,7 +139,6 @@
 <div class="container">
     <div class="card">
         <div class="profile-picture"></div>
-        <h2>내 정보</h2>
         <p>아이디: <span th:text="${user.username}">사용자 이름</span></p>
         <p>이메일: <span th:text="${user.email}">사용자 이메일</span></p>
         <p>좋아요 개수: <span th:text="${user.liked}">0</span></p>
@@ -167,20 +146,24 @@
 
         <div class="buttons">
             <a href="http://localhost:8080/BBelog">홈으로</a>
-            <a href="http://localhost:8080/BBelog/profile">프로필</a>
+            <form th:action="@{/BBelog/temporary/update/{username}/{id} (username=${board.user.username}, id=${board.id})}" method="get">
+                <button type="submit">수정하기</button>
+            </form>
+
+            <form th:action="@{/BBelog/temporary/delete/{username}/{id} (username=${board.user.username}, id=${board.id})}" method="post">
+            <button type="submit">삭제하기</button>
+        </form>
+
         </div>
-    </div>
 
-    <div class="board-container">
-        <div th:each="board : ${boards}" class="board-card">
-            <h3 th:text="${board.title}">제목</h3>
-            <p th:text="${board.content}">내용</p>
-            <div class="meta-info">
-                작성자: <span th:text="${board.user.username}">작성자</span><br>
-                작성일자: <span th:text="${board.writeTime}">2024-06-21</span>
+
+
+
+        <div class="posts-container">
+                <h3 th:text="${board.title}">제목</h3>
+                <p th:text="${board.content}">내용</p>
+                <p class="meta-info">작성일: <span th:text="${#dates.format(board.writeTime, 'yyyy-MM-dd')}">2023-01-01</span></p>
             </div>
-            <a th:href="@{/BBelog/temporary/{username}/{id}(username=${session.username}, id=${board.id})}">자세히 보기</a>
-
         </div>
     </div>
 </div>
