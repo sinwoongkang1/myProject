@@ -13,6 +13,8 @@ import java.util.List;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
+
+//    Board findById(Long id);
     Board findByTitle(String title);
     Board save(Board board);
     void deleteByTitle(String title);

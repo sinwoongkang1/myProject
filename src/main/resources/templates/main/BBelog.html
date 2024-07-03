@@ -14,6 +14,40 @@
             position: relative;
         }
         .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+        }
+
+        .logo-and-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+            margin-right: 20px;
+        }
+
+        .additional-links {
+            display: flex;
+        }
+
+        .additional-links span {
+            margin-right: 10px;
+        }
+
+        .right-links {
+            display: flex;
+            align-items: center;
+        }
+        .header {
             background-color: #007BFF;
             color: white;
             padding: 10px 20px;
@@ -102,7 +136,13 @@
 <body>
 
 <header class="header">
-    <a href="http://localhost:8080/BBelog" class="logo">BBelog</a>
+    <div class="logo-and-links">
+        <a href="http://localhost:8080/BBelog" class="logo">BBelog</a>
+        <div class="additional-links">
+            <span><a href="#" onclick="sortCardsByDate()">최신순</a></span>
+            <span><a href="#" onclick="sortCardsByPopularity()">인기순</a></span>
+        </div>
+    </div>
     <div class="right-links">
         <a th:if="${session.username == null}" href="http://localhost:8080/BBelog/join">회원가입</a>
         <a th:if="${session.username == null}" href="http://localhost:8080/BBelog/login">로그인</a>

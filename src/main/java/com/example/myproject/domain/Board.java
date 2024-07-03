@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "board")
@@ -37,6 +39,11 @@ public class Board {
     @Column(name = "comment")
     private String comment;
 
+    @ElementCollection
+    @CollectionTable(name = "liked_users", joinColumns = @JoinColumn(name = "board_id"))
+    @Column(name = "username")
+    private Set<String> likedUsers = new HashSet<>();
+
     @Column(name = "liked")
     private int liked;
 
@@ -47,8 +54,16 @@ public class Board {
     private boolean temporary;
 
     public Board() {
-        this.liked = 0;
         this.writeTime = new Date();
         this.temporary = false;
+    }
+    public void addLikedUser(String username) {
+        likedUsers.add(username);
+    }
+    public void removeLikedUser(String username) {
+        likedUsers.remove(username);
+    }
+    public int countLikedUsers() {
+        return likedUsers.size();
     }
 }

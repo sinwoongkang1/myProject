@@ -8,12 +8,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+
+    public Optional<Board> findById(Long id){
+        return boardRepository.findById(id);
+    }
 
     public void save(Board board) {
         boardRepository.save(board);

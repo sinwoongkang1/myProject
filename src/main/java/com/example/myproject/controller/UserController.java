@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -30,7 +31,7 @@ public class UserController {
     public String BBelogIndex(Model model) {
         List<Board> boards = boardService.findByTemporaryFalse();
         model.addAttribute("boards", boards);
-        return "BBelog";
+        return "/main/BBelog";
     }
 
     @GetMapping("/join")
@@ -42,7 +43,7 @@ public class UserController {
     public String join(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
         if (userService.existsByUsername(user.getUsername())) {
             redirectAttributes.addFlashAttribute("error", "이미 존재하는 ID입니다. 다른 ID를 사용해주세요.");
-            return "redirect:/BBelog/join";
+            return "redirect:/BBelog/main/join";
         } else {
             userService.saveUser(user);
             Admin admin = new Admin(user);
@@ -53,7 +54,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String login() {
-        return "login";
+        return "/main/login";
     }
 
     @PostMapping("/login")
@@ -81,16 +82,23 @@ public class UserController {
     @GetMapping("/profile")
     public String profile(Model model, @CookieValue(value = "username", defaultValue = "") String username) {
         if (username.isEmpty()) {
-            return "redirect:/BBelog/login";
+            return "redirect:/BBelog/main/login";
         }
         User user = userService.findUserByUsername(username);
+        int myCal = 10000;
         if (user == null) {
             return "redirect:/BBelog";
         }
             List<Board> boards = boardService.findByBoardUserAndTemporaryFalse(user);
+            int boardSize = boards.size();
+            int cal = myCal - (500*boardSize);
+            user.setCal(cal);
+            userService.saveUser(user);
+            boards.sort(Comparator.comparing(Board::getWriteTime).reversed());
             model.addAttribute("user", user);
             model.addAttribute("boards", boards);
-            return "profile";
+            model.addAttribute("cal", cal);
+            return "/main/profile";
 
     }
 

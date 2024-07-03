@@ -1,17 +1,21 @@
 package com.example.myproject.controller;
 
+import com.example.myproject.config.FileUploadProperties;
 import com.example.myproject.domain.Board;
 import com.example.myproject.domain.User;
 import com.example.myproject.service.BoardService;
 import com.example.myproject.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +29,7 @@ public class BoardController {
 
     @GetMapping("/write")
     public String write() {
-        return "write";
+        return "/board/write";
     }
 
     @PostMapping("/write")
@@ -88,9 +92,10 @@ public class BoardController {
         }
         User user = userService.findUserByUsername(username);
         List<Board> temporaryBoards = boardService.findByBoardUserAndTemporaryTrue(user);
+        temporaryBoards.sort(Comparator.comparing(Board::getWriteTime).reversed());
         model.addAttribute("user", user);
         model.addAttribute("boards", temporaryBoards);
-        return "temporary";
+        return "/temporary/temporary_list";
     }
 
     @GetMapping("/profile/{username}/{id}")
@@ -104,9 +109,9 @@ public class BoardController {
         model.addAttribute("board", board);
 
         if (username.equals(cookieUsername)) {
-            return "board_writed_me";
+            return "/board/board_writed_me";
         } else {
-            return "board_writed";
+            return "/board/board_writed";
         }
     }
 
@@ -139,7 +144,7 @@ public class BoardController {
         model.addAttribute("user", user);
         model.addAttribute("id", id);
         model.addAttribute("board", board);
-        return "edit";
+        return "/board/edit";
     }
 
     @PostMapping("/update/{username}/{id}")
@@ -165,7 +170,7 @@ public class BoardController {
         model.addAttribute("user", user);
         model.addAttribute("id", id);
         model.addAttribute("board", board);
-        return "wirted_temporary";
+        return "/temporary/wirted_temporary";
     }
 
     @PostMapping("/temporary/delete/{username}/{id}")
@@ -185,7 +190,7 @@ public class BoardController {
             return "error";
         }
         model.addAttribute("board", board);
-        return "temporary_edit";
+        return "/temporary/temporary_edit";
     }
 
     @PostMapping("/temporary/update/{username}/{id}")
@@ -206,11 +211,12 @@ public class BoardController {
 
     @PostMapping("/temporary/push/{username}/{id}")
     public String temporaryPush(@PathVariable String username,
-                                @PathVariable Long id,
+                                @PathVariable String id,
                                 @RequestParam String title,
                                 @RequestParam String content,
                                 Model model) {
-        Board board = boardService.findByUsernameAndBoardIdAndTemporaryTrue(username, id);
+        Long userId = Long.parseLong(id);
+        Board board = boardService.findByUsernameAndBoardIdAndTemporaryTrue(username, userId);
             board.setTitle(title);
             board.setContent(content);
             board.setTemporary(false);
@@ -221,6 +227,8 @@ public class BoardController {
             model.addAttribute("username", username);
             model.addAttribute("id", id);
 
-        return "redirect:/profile";
+        return "redirect:/BBelog/profile";
     }
+
+
 }

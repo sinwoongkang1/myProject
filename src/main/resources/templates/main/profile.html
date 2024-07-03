@@ -71,14 +71,37 @@
             color: #999;
             margin-top: 10px;
         }
-        .profile-picture {
+        .profile-picture-container {
             width: 150px;
             height: 150px;
             border-radius: 50%;
             margin: 0 auto 20px;
-            background-image: url('https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcRpSo5X-9GknhLwsqbgdtHhueRB_ZitJC-6IPBvZ7KWWxgFHCl9oke9ouGB8DzTUth-fvavDDA1pSJBlc4'); /* 손흥민 사진 URL */
-            background-size: cover;
-            background-position: center;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+        .profile-picture {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .profile-picture-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .profile-picture-container:hover .profile-picture-overlay {
+            opacity: 1;
         }
         .buttons {
             display: flex;
@@ -145,7 +168,10 @@
 
 <div class="container">
     <div class="card">
-        <div class="profile-picture"></div>
+        <div class="profile-picture-container" id="profilePictureContainer">
+            <div class="profile-picture" id="profilePicture" style="background-image: url('https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcRpSo5X-9GknhLwsqbgdtHhueRB_ZitJC-6IPBvZ7KWWxgFHCl9oke9ouGB8DzTUth-fvavDDA1pSJBlc4');"></div>
+            <div class="profile-picture-overlay" onclick="showChangeProfileForm()">프로필 사진 변경</div>
+        </div>
         <h2>내 정보</h2>
         <p>아이디: <span th:text="${user.username}">사용자 이름</span></p>
         <p>이메일: <span th:text="${user.email}">사용자 이메일</span></p>
@@ -169,12 +195,33 @@
     </div>
 </div>
 
+<div id="changeProfileForm" class="hidden">
+    <form action="/BBelog/uploadProfilePicture" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+        <input type="file" name="profilePicture" accept="image/*" required>
+        <button type="submit">업로드</button>
+    </form>
+</div>
+
 <script>
     function confirmLogout(event) {
         event.preventDefault();
         if (confirm("정말 로그아웃 하시겠습니까?")) {
             window.location.href = "/BBelog/logout";
         }
+    }
+
+    function showChangeProfileForm() {
+        document.getElementById('changeProfileForm').classList.remove('hidden');
+        document.getElementById('profilePictureContainer').classList.add('hidden');
+    }
+
+    function validateForm() {
+        var profilePicture = document.querySelector('input[name="profilePicture"]');
+        if (profilePicture.files.length === 0) {
+            alert('프로필 사진을 선택해주세요.');
+            return false;
+        }
+        return true;
     }
 </script>
 

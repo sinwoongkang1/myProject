@@ -2,15 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Form</title>
-</head>
-<body>
-
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>임시 저장글 수정하기</title>
     <style>
@@ -175,19 +166,20 @@
             <button class="attach-button" type="button" onclick="window.location.href='http://localhost:8080/BBelog'">홈으로</button>
             <button class="attach-button" type="submit">수정 하기</button>
             <button class="publish-button" type="button" onclick="publishForm()">출간 하기</button>
-<!--            출간하기 구현 필요-->
         </form>
 
-        <script>
+        <script th:inline="javascript">
             function publishForm() {
-                document.getElementById('updateForm').action = '/BBelog/temporary/push/${board.user.username}/${board.id}';
+                var username = /*[[${board.user.username}]]*/ 'defaultUsername';
+                var id = /*[[${board.id}]]*/ 'defaultId';
+                var formAction = '/BBelog/temporary/push/' + username + '/' + id;
+                document.getElementById('updateForm').action = formAction;
                 document.getElementById('updateForm').submit();
             }
         </script>
-
-
     </div>
 </div>
+
 <script>
     function saveTemporary() {
         const title = document.getElementById('title').value;
@@ -199,7 +191,7 @@
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ title, content, username }),  // username 포함
+            body: JSON.stringify({ title, content, username }),
         })
             .then(response => {
                 if (response.ok) {
