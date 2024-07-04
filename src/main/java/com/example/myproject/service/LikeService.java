@@ -9,6 +9,8 @@ import com.example.myproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class LikeService {
@@ -16,16 +18,20 @@ public class LikeService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
 
-    public void likeBoard(User user, Board board){
-        Liked liked = new Liked(user,board);
+    public void likeBoard(User user, Board board) {
+        Liked liked = new Liked();
+        liked.setUser(user);
+        liked.setBoard(board);
         likeRepository.save(liked);
-        int userCount = user.getLiked();
-        int boardCount = board.getLiked();
-        user.setLiked(++userCount);
-        board.setLiked(++boardCount);
-        userRepository.save(user);
-        boardRepository.save(board);
     }
 
-
+    public List<Long> getUserIdsByBoardId(Long boardId) {
+        return likeRepository.getUserIdsByBoardId(boardId);
+    }
+    public void unlikeBoard(User user, Board board) {
+        Liked liked = likeRepository.findByUserAndBoard(user, board);
+        if (liked != null) {
+            likeRepository.delete(liked);
+        }
+    }
 }

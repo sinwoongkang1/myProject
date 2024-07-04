@@ -169,8 +169,7 @@
 <div class="container">
     <div class="card">
         <div class="profile-picture-container" id="profilePictureContainer">
-            <div class="profile-picture" id="profilePicture" style="background-image: url('https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcRpSo5X-9GknhLwsqbgdtHhueRB_ZitJC-6IPBvZ7KWWxgFHCl9oke9ouGB8DzTUth-fvavDDA1pSJBlc4');"></div>
-            <div class="profile-picture-overlay" onclick="showChangeProfileForm()">프로필 사진 변경</div>
+            <img class="profile-picture" id="profilePicture" th:if="${user.profileImage != null}" th:src="@{/BBelog/${user.profileImage.filePath}}" alt="Profile Picture">
         </div>
         <h2>내 정보</h2>
         <p>아이디: <span th:text="${user.username}">사용자 이름</span></p>
@@ -189,15 +188,16 @@
         <div th:each="board : ${boards}" class="board-card">
             <h3 th:text="${board.title}">제목</h3>
             <p th:text="${board.content}">내용</p>
-            <p class="meta-info">작성일: <span th:text="${#dates.format(board.writeTime, 'yyyy-MM-dd')}">2023-01-01</span></p>
+            <p class="meta-info">작성일: <span th:text="${#dates.format(board.writeTime, 'yyyy-MM-dd HH:mm')}">2023-01-01</span></p>
             <a th:href="@{/BBelog/profile/{username}/{id}(username=${board.user.username}, id=${board.id})}">자세히 보기</a>
         </div>
     </div>
 </div>
 
 <div id="changeProfileForm" class="hidden">
-    <form action="/BBelog/uploadProfilePicture" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+    <form id="profileForm" action="/BBelog/uploadProfilePicture" method="post" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)">
         <input type="file" name="profilePicture" accept="image/*" required>
+        <input type="hidden" name="username" value="${session.username}">
         <button type="submit">업로드</button>
     </form>
 </div>
@@ -210,18 +210,25 @@
         }
     }
 
-    function showChangeProfileForm() {
-        document.getElementById('changeProfileForm').classList.remove('hidden');
-        document.getElementById('profilePictureContainer').classList.add('hidden');
-    }
 
-    function validateForm() {
-        var profilePicture = document.querySelector('input[name="profilePicture"]');
-        if (profilePicture.files.length === 0) {
-            alert('프로필 사진을 선택해주세요.');
-            return false;
-        }
-        return true;
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        var form = event.target;
+        var formData = new FormData(form);
+
+        fetch('/BBelog/uploadProfilePicture', {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // JSON 형식으로 응답을 파싱
+        }).then(data => {
+            console.log(data.message); // "File uploaded successfully" 출력
+        }).catch(error => {
+            console.error('Error:', error);
+        });
     }
 </script>
 

@@ -40,8 +40,9 @@ public class User {
     @Column(name = "regi_date")
     private Date regiDate;
 
-    @Column(name = "user_image")
-    private String userImage;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_image_id")
+    private Board.Image profileImage;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Board> boards;

@@ -16,8 +16,9 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
-    public Optional<Board> findById(Long id){
-        return boardRepository.findById(id);
+
+    public Board findById(Long id){
+        return boardRepository.findById(id).orElse(null);
     }
 
     public void save(Board board) {

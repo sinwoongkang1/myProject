@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -28,16 +29,30 @@ public class LikeController {
         if (loggedInUsername.isEmpty()) {
             return "redirect:/BBelog/login";
         }
-
+        User user2 = userService.findUserByUsername(loggedInUsername);
         User user = userService.findUserByUsername(username);
-        Optional<Board> board = boardService.findById(id);
+        Board board = boardService.findById(id);
 
-        if (user != null && board.isPresent()) {
-            likeService.likeBoard(user, board.get());
+        List<Long> likedUsers = likeService.getUserIdsByBoardId(id);
 
-            return "redirect:/BBelog/profile/" + username + "/" + id;
+        int userCount = user.getLiked();
+        int boardCount = board.getLiked();
+
+        if (!likedUsers.contains(user2.getId())) {
+            user.setLiked(++userCount);
+            board.setLiked(++boardCount);
+            userService.saveUser(user);
+            boardService.save(board);
+            likeService.likeBoard(user2, board);
+        } else {
+            user.setLiked(--userCount);
+            board.setLiked(--boardCount);
+            userService.saveUser(user);
+            boardService.save(board);
+            likeService.unlikeBoard(user2, board);
         }
         return "redirect:/BBelog/profile/" + username + "/" + id;
     }
+
 
 }
