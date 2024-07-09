@@ -2,6 +2,7 @@ package com.example.myproject.repository;
 
 import com.example.myproject.domain.Board;
 import com.example.myproject.domain.User;
+import com.example.myproject.dto.FolloweeIdDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -24,6 +25,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findByTemporaryTrue();
     List<Board> findBoardByUserAndTemporaryFalse(User user);
     List<Board> findBoardByUserAndTemporaryTrue(User user);
+    List<Board> findBoardByUserId(Long id);
 
     @Query("SELECT b FROM Board b WHERE b.user.username = :username AND b.id = :id AND b.temporary = false")
     Board findByUsernameAndBoardIdAndTemporaryFalse(@Param("username") String username, @Param("id") Long id);
@@ -37,4 +39,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Transactional
     @Query("DELETE FROM Board b WHERE b.user.username = :username")
     void deleteBoardByUsername(@Param("username") String username);
+
+
+    List<Board> findByUserIdIn(List<FolloweeIdDTO> userIds);
 }

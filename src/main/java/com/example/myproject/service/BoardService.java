@@ -2,19 +2,21 @@ package com.example.myproject.service;
 
 import com.example.myproject.domain.Board;
 import com.example.myproject.domain.User;
+import com.example.myproject.dto.FolloweeIdDTO;
 import com.example.myproject.repository.BoardRepository;
+import com.example.myproject.repository.FollowRepository;
 import com.example.myproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final FollowRepository followRepository;
 
 
     public Board findById(Long id){
@@ -75,4 +77,14 @@ public class BoardService {
     public Board UpdateBoard(Board board) {
         return boardRepository.save(board);
     }
+
+    public List<Board> findBoardByUserId (Long id) {
+    return boardRepository.findBoardByUserId(id);}
+
+    public List<Board> findBoardsByUserIds(List<FolloweeIdDTO> userIds) {
+        return boardRepository.findByUserIdIn(userIds);
+    }
+
+
+
 }

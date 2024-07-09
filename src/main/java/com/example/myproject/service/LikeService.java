@@ -34,4 +34,7 @@ public class LikeService {
             likeRepository.delete(liked);
         }
     }
+    public List<Board> getBoardsLikedByUser(Long userId) {
+        return likeRepository.findBoardsLikedByUser(userId);
+    }
 }

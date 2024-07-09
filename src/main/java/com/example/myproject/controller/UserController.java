@@ -115,46 +115,46 @@ public class UserController {
 
     }
 
-    @PostMapping("/uploadProfilePicture")
-    public ResponseEntity<Map<String, String>> uploadProfilePicture(@RequestParam("profilePicture") MultipartFile file,
-                                                                    @RequestParam String username) {
-        String uploadDir = "/Users/kang/Documents/upload/";
-        Map<String, String> response = new HashMap<>();
-        try {
-            File uploadDirFile = new File(uploadDir);
-            if (!uploadDirFile.exists()) {
-                uploadDirFile.mkdirs();
-            }
-            String fileName = file.getOriginalFilename();
-            File destinationFile = new File(uploadDirFile, fileName);
-            file.transferTo(destinationFile); // MultipartFile을 파일로 저장
-
-            // 이미지 경로 설정
-            String imagePath = "/uploads/" + fileName;
-
-            // User 엔티티를 찾거나 생성합니다
-            User user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-
-            // Image 엔티티 생성 및 User 엔티티에 연결
-            Board.Image image = new Board.Image(fileName, imagePath);
-            user.setProfileImage(image);
-
-            // User 엔티티를 저장합니다
-            userRepository.save(user);
-
-            response.put("fileName", fileName);
-            return ResponseEntity.ok(response);
-        } catch (IOException e) {
-            e.printStackTrace();
-            response.put("error", "File upload failed");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            response.put("error", "User not found");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
-    }
+//    @PostMapping("/uploadProfilePicture")
+//    public ResponseEntity<Map<String, String>> uploadProfilePicture(@RequestParam("profilePicture") MultipartFile file,
+//                                                                    @RequestParam String username) {
+//        String uploadDir = "/Users/kang/Documents/upload/";
+//        Map<String, String> response = new HashMap<>();
+//        try {
+//            File uploadDirFile = new File(uploadDir);
+//            if (!uploadDirFile.exists()) {
+//                uploadDirFile.mkdirs();
+//            }
+//            String fileName = file.getOriginalFilename();
+//            File destinationFile = new File(uploadDirFile, fileName);
+//            file.transferTo(destinationFile); // MultipartFile을 파일로 저장
+//
+//            // 이미지 경로 설정
+//            String imagePath = "/uploads/" + fileName;
+//
+//            // User 엔티티를 찾거나 생성합니다
+//            User user = userRepository.findByUsername(username)
+//                    .orElseThrow(() -> new RuntimeException("User not found"));
+//
+//            // Image 엔티티 생성 및 User 엔티티에 연결
+//            Board.Image image = new Board.Image(fileName, imagePath);
+//            user.setProfileImage(image);
+//
+//            // User 엔티티를 저장합니다
+//            userRepository.save(user);
+//
+//            response.put("fileName", fileName);
+//            return ResponseEntity.ok(response);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            response.put("error", "File upload failed");
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+//        } catch (RuntimeException e) {
+//            e.printStackTrace();
+//            response.put("error", "User not found");
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+//        }
+//    }
 
 
 

@@ -27,6 +27,21 @@
             text-decoration: none;
             color: white;
         }
+        .logo-and-links {
+            display: flex;
+            align-items: center;
+            color: white;
+        }
+        .additional-links {
+            display: flex;
+            margin-left: 20px; /* 간격을 추가합니다 */
+        }
+        .additional-links a {
+            margin-left: 10px;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
         .header .right-links {
             display: flex;
             align-items: center;
@@ -157,7 +172,13 @@
 <body>
 
 <header class="header">
-    <a href="http://localhost:8080/BBelog" class="logo">BBelog</a>
+    <div class="logo-and-links">
+        <a href="http://localhost:8080/BBelog" class="logo">BBelog</a>
+        <div class="additional-links">
+            <a href="http://localhost:8080/BBelog/likesboards">좋아요</a>
+            <a href="http://localhost:8080/BBelog/following">팔로잉</a>
+        </div>
+    </div>
     <div class="right-links">
         <a th:if="${session.username == null}" href="http://localhost:8080/BBelog/join">회원가입</a>
         <a th:if="${session.username == null}" href="http://localhost:8080/BBelog/login">로그인</a>

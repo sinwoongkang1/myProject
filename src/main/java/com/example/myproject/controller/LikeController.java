@@ -7,6 +7,7 @@ import com.example.myproject.service.LikeService;
 import com.example.myproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,6 +53,16 @@ public class LikeController {
             likeService.unlikeBoard(user2, board);
         }
         return "redirect:/BBelog/profile/" + username + "/" + id;
+    }
+
+    @GetMapping("/likesboards")
+    public String likesBoards(@CookieValue(value = "username", defaultValue = "") String loggedInUsername,
+                              Model model) {
+        User user = userService.findUserByUsername(loggedInUsername);
+        Long id = user.getId();
+        List<Board> boards = likeService.getBoardsLikedByUser(id);
+        model.addAttribute("boards", boards);
+        return "board/likesboards";
     }
 
 

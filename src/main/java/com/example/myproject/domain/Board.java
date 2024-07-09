@@ -67,20 +67,4 @@ public class Board {
         return likedUsers.size();
     }
 
-    @Entity
-    @Getter
-    @Setter
-    @Table(name = "image")
-    public static class Image {
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
-
-        private String fileName;
-        private String filePath;
-
-        @OneToOne(mappedBy = "profileImage")
-        private User user;
-
-    }
 }

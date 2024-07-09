@@ -172,7 +172,13 @@
         </div>
         <div class="profile-buttons">
             <button onclick="location.href='http://localhost:8080/BBelog'">홈으로</button>
-            <button>팔로우 하기</button>
+            <div class="buttons">
+                <form id="followForm" method="post" th:action="@{/BBelog/following/{username}/{id}(username=${user.username}, id=${board.id})}">
+
+                <button type="submit">팔로우</button>
+                </form>
+            </div>
+
         </div>
     </div>
 </div>

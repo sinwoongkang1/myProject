@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BBelog 홈페이지</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: auto;
+      padding: 0;
+      background: url('https://www.pngitem.com/pimgs/m/105-1052152_before-and-after-silhouettes-before-and-after-weight.png') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #007BFF;
+      color: white;
+      padding: 10px 20px;
+    }
+
+    .logo-and-links {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none;
+      color: white;
+      margin-right: 20px;
+    }
+
+    .additional-links {
+      display: flex;
+    }
+
+    .additional-links span a{
+      margin-right: 10px;
+      background-color: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+      text-decoration: none;
+    }
+
+    .header .right-links a {
+      margin-left: 10px;
+      background-color: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+      text-decoration: none;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      padding: 20px;
+      z-index: 1;
+    }
+
+    .card {
+      background-color: #f8f9fa;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin: 10px;
+      padding: 20px;
+      width: 300px;
+      height: 360px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #555;
+      flex-grow: 1;
+    }
+
+    .card .meta-info {
+      font-size: 12px;
+      color: #999;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-top: auto;
+    }
+
+    .card .meta-info span {
+      margin-bottom: 5px;
+    }
+
+    .card .likes {
+      font-size: 12px;
+      color: #007BFF;
+      align-self: flex-end;
+    }
+
+    .card a {
+      text-decoration: none;
+      color: #007BFF;
+      font-weight: bold;
+      font-size: 14px;
+      display: block;
+      align-self: flex-end;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo-and-links">
+    <a href="http://localhost:8080/BBelog" class="logo">BBelog</a>
+    <div class="additional-links">
+      <span><a href="http://localhost:8080/BBelog/likesboards">좋아요</a></span>
+      <span><a href="http://localhost:8080/BBelog/following">팔로잉</a></span>
+    </div>
+  </div>
+  <div class="right-links">
+    <a th:if="${session.username == null}" href="http://localhost:8080/BBelog/join">회원가입</a>
+    <a th:if="${session.username == null}" href="http://localhost:8080/BBelog/login">로그인</a>
+    <a th:if="${session.username != null}" href="http://localhost:8080/BBelog/logout" onclick="confirmLogout(event)">로그아웃</a>
+    <a th:if="${session.username != null}" href="http://localhost:8080/BBelog/profile">내 정보</a>
+  </div>
+</header>
+
+<div class="container">
+  <div id="sortedCards" style="display: flex; flex-wrap: wrap; justify-content: flex-start;">
+    <div th:each="board : ${boards}" class="card" th:if="${__counter__ < 5}">
+      <h2 th:text="${board.title}">제목</h2>
+      <p th:text="${board.content}">내용</p>
+      <div class="meta-info">
+        <span>작성자: <span th:text="${board.user.username}">사용자</span></span>
+        <span>작성일: <span th:text="${board.writeTime}">2024-06-21 13:37</span></span>
+      </div>
+      <div class="likes">
+        ♡ <span th:text="${board.liked}">0</span>
+      </div>
+      <a th:href="@{/BBelog/profile/{username}/{id}(username=${board.user.username}, id=${board.id})}">자세히 보기</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  function confirmLogout(event) {
+    event.preventDefault();
+    if (confirm("정말 로그아웃 하시겠습니까?")) {
+      window.location.href = "/BBelog/logout";
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    sortCardsByDate();
+  });
+
+
+</script>
+
+</body>
+</html>
