@@ -190,7 +190,7 @@
 <div class="container">
     <div class="card">
         <div class="profile-picture-container" id="profilePictureContainer">
-            <img class="profile-picture" id="profilePicture" th:if="${user.profileImage != null}" th:src="@{/BBelog/${user.profileImage.filePath}}" alt="Profile Picture">
+            <img class="profile-picture" id="profilePicture"  th:src = "${user.getProfileImage().getFilePath()}">
         </div>
         <h2>내 정보</h2>
         <p>아이디: <span th:text="${user.username}">사용자 이름</span></p>
@@ -217,7 +217,7 @@
 
 <div id="changeProfileForm" class="hidden">
     <form id="profileForm" action="/BBelog/uploadProfilePicture" method="post" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)">
-        <input type="file" name="profilePicture" accept="image/*" required>
+        <input type="file" name="file" accept="image/*" required>
         <input type="hidden" name="username" value="${session.username}">
         <button type="submit">업로드</button>
     </form>

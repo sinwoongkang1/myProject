@@ -41,7 +41,7 @@ public class User {
     private Date regiDate;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "profile_image_id")
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image profileImage;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
