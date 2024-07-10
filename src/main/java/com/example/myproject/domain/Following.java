@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
 
 @Entity
 @Table(name = "following")
@@ -19,17 +18,12 @@ public class Following {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "follower_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "follower_id", referencedColumnName = "id", nullable = false)
     private User follower;
 
-    @ManyToOne
-    @JoinColumn(name = "followee_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "followee_id", referencedColumnName = "id", nullable = false)
     private User followee;
-
-    @ManyToOne
-    @JoinColumn(name = "board_id")
-    private Board board;
-
 
 }

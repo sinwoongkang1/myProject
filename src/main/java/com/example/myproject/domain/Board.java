@@ -21,7 +21,7 @@ public class Board {
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "username", referencedColumnName = "username", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
     @Column(name = "password")
@@ -57,14 +57,4 @@ public class Board {
         this.writeTime = new Date();
         this.temporary = false;
     }
-    public void addLikedUser(String username) {
-        likedUsers.add(username);
-    }
-    public void removeLikedUser(String username) {
-        likedUsers.remove(username);
-    }
-    public int countLikedUsers() {
-        return likedUsers.size();
-    }
-
 }

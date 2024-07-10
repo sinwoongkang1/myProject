@@ -27,7 +27,5 @@ public class UserService {
         Optional<User> userOptional = Optional.ofNullable(userRepository.findByUsername(username));
         return userOptional.isPresent();
     }
-    public User findUserByBoardId(Long id) {
-        return userRepository.findByBoards_Id(id);
-    }
+
 }

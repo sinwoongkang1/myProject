@@ -2,7 +2,6 @@ package com.example.myproject.repository;
 
 import com.example.myproject.domain.Board;
 import com.example.myproject.domain.User;
-import com.example.myproject.dto.FolloweeIdDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -41,5 +40,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     void deleteBoardByUsername(@Param("username") String username);
 
 
-    List<Board> findByUserIdIn(List<FolloweeIdDTO> userIds);
+
+    @Query("SELECT b.user.id FROM Board b WHERE b.id = :boardId")
+    Long findAuthorIdByBoardId(Long boardId);
+
+    List<Board> findByUserIdIn(List<Long> userIds);
 }
