@@ -53,7 +53,8 @@ public class Board {
     @Column(name = "temporary")
     private boolean temporary;
 
-    @OneToOne(mappedBy = "board", cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
     private Photo photo;
 
     public Board() {
