@@ -1,8 +1,6 @@
 package com.example.myproject.controller;
 
-import com.example.myproject.config.FileUploadProperties;
 import com.example.myproject.domain.Board;
-import com.example.myproject.domain.Photo;
 import com.example.myproject.domain.User;
 import com.example.myproject.service.BoardService;
 import com.example.myproject.service.PhotoService;
@@ -13,13 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
