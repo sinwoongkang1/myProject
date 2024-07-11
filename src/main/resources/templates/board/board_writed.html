@@ -98,7 +98,6 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background-image: url('https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcRpSo5X-9GknhLwsqbgdtHhueRB_ZitJC-6IPBvZ7KWWxgFHCl9oke9ouGB8DzTUth-fvavDDA1pSJBlc4'); /* 손흥민 사진 URL */
             background-size: cover;
             background-position: center;
             margin-right: 20px;
@@ -163,7 +162,8 @@
 
     <div class="profile-card">
         <div class="profile-card-inner">
-            <div class="profile-picture"></div>
+            <img class="profile-picture" id="profilePicture" th:if="${user.profileImage == null}" src="https://cdn-icons-png.flaticon.com/512/1902/1902960.png" alt="Default Profile Picture">
+            <img class="profile-picture" id="profilePicture" th:if="${user.profileImage != null}" th:src="@{'/' + ${user.profileImage.filePath}}" alt="Profile Picture">
             <div class="profile-info">
                 <p><span th:text="${user.username}">사용자 이름</span></p>
                 <p><span th:text="${user.getWantedWeight()}">사용자 이름</span> kg 이 목표~!</p>
@@ -171,14 +171,12 @@
             </div>
         </div>
         <div class="profile-buttons">
-            <button onclick="location.href='http://localhost:8080/BBelog'">홈으로</button>
             <div class="buttons">
+                <button onclick="location.href='http://localhost:8080/BBelog'" style="padding: 10px 20px;">홈으로</button>
                 <form id="followForm" method="post" th:action="@{/BBelog/following/{username}/{id}(username=${user.username}, id=${board.id})}">
-
-                <button type="submit">팔로우</button>
+                    <button type="submit">팔로우</button>
                 </form>
             </div>
-
         </div>
     </div>
 </div>

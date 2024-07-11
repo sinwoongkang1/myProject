@@ -83,11 +83,16 @@
             margin-bottom: 10px;
         }
         .profile-card {
-            height: 150px;
             display: flex;
-            align-items: center;
-            text-align: left;
             flex-direction: column;
+            align-items: center;
+            width: 900px;
+            background-color: rgba(248, 249, 250, 0.9);
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .profile-card-inner {
             display: flex;
@@ -98,7 +103,6 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background-image: url('https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcRpSo5X-9GknhLwsqbgdtHhueRB_ZitJC-6IPBvZ7KWWxgFHCl9oke9ouGB8DzTUth-fvavDDA1pSJBlc4'); /* 손흥민 사진 URL */
             background-size: cover;
             background-position: center;
             margin-right: 20px;
@@ -107,6 +111,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: flex-start; /* 수정: 좌측 정렬로 변경 */
         }
         .profile-info p {
             margin: 5px 0;
@@ -117,15 +122,16 @@
             display: flex;
             justify-content: center;
             width: 100%;
+            margin-top: 10px; /* 수정: 버튼 간격 조정 */
         }
-        .buttons button, .profile-buttons button, .buttons a {
+        .buttons button, .profile-buttons button, .buttons a, .profile-buttons a {
             padding: 10px 40px;
             background-color: #555;
             color: white;
             text-decoration: none;
             border-radius: 5px;
             transition: background-color 0.3s;
-            margin: 10px 1px;
+            margin: 10px 5px; /* 수정: 버튼 간격 조정 */
             border: none;
             cursor: pointer;
             text-align: center;
@@ -133,42 +139,22 @@
             text-align: center;
         }
 
-        .buttons a.buttons { /* Added to specifically style the "홈으로" link */
-            padding: 10px 40px; /* Adjust padding as needed */
+        .buttons a.buttons {
+            padding: 10px 40px;
             background-color: #555;
             color: white;
             text-decoration: none;
             border-radius: 5px;
             transition: background-color 0.3s;
-            margin: 10px 1px;
+            margin: 10px 5px; /* 수정: 버튼 간격 조정 */
             border: none;
             cursor: pointer;
             text-align: center;
-            display: inline-block; /* Ensure button width is respected */
-            text-align: center; /* Center text */
-        }
-        .buttons a.buttons:hover { /* Adjust hover style if needed */
-            background-color: #333;
-        }
-        .posts-container {
+            display: inline-block;
             text-align: center;
-            margin-top: 20px;
         }
-        .post {
-            background-color: rgba(248, 249, 250, 0.9);
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .post h3 {
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-        .post p {
-            font-size: 16px;
-            color: #555;
+        .buttons a.buttons:hover, .profile-buttons a:hover {
+            background-color: #333;
         }
     </style>
 </head>
@@ -202,10 +188,11 @@
 
     <div class="profile-card">
         <div class="profile-card-inner">
-            <div class="profile-picture"></div>
+            <img class="profile-picture" id="profilePicture" th:if="${user.profileImage == null}" src="https://cdn-icons-png.flaticon.com/512/1902/1902960.png" alt="Default Profile Picture">
+            <img class="profile-picture" id="profilePicture" th:if="${user.profileImage != null}" th:src="@{'/' + ${user.profileImage.filePath}}" alt="Profile Picture">
             <div class="profile-info">
                 <p><span th:text="${user.username}">사용자 이름</span></p>
-                <p><span th:text="${user.getWantedWeight()}">사용자 이름</span> kg 이 목표~!</p>
+                <p><span th:text="${user.getWantedWeight()}">사용자 목표 체중</span> kg 이 목표~!</p>
                 <p>♡ <span id="likedCount" th:text="${user.liked}">0</span></p>
             </div>
         </div>

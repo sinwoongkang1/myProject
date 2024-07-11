@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 
 
@@ -30,16 +31,23 @@ private final UserService userService;
         if (username.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is missing in the cookie");
         }
-
         try {
+
             Image image = imageService.saveImage(file);
             User user = userService.findByUsername(username);
-            String filePath = "/Users/kang/Documents/myProject/src/main/exampleProfilePicture/"+image.getFileName();
+            String filePath = "images/" + image.getFileName();
             image.setFilePath(filePath);
+
+            // 파일 저장 경로
+            String uploadDir = new File("src/main/resources/static/images").getAbsolutePath();
+            file.transferTo(new File(uploadDir + "/" + image.getFileName()));
+
             user.setProfileImage(image);
             userService.saveUser(user);
             model.addAttribute("user", user);
             return ResponseEntity.status(HttpStatus.OK).body(filePath);
+
+
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload profile picture");
         }

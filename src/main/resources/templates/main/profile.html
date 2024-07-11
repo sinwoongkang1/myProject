@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif;
             margin: auto;
             padding: 0;
-            background: url('https://www.pngitem.com/pimgs/m/105-1052152_before-and-after-silhouettes-before-and-after-weight.png') no-repeat center center fixed;
+            background: url('https://www.pngitem.com/pimgs/m/105-1052152_before-and-after-silhouettes-before-and-after-weight.png');
             background-size: cover;
             position: relative;
         }
@@ -34,7 +34,7 @@
         }
         .additional-links {
             display: flex;
-            margin-left: 20px; /* 간격을 추가합니다 */
+            margin-left: 20px;
         }
         .additional-links a {
             margin-left: 10px;
@@ -100,24 +100,6 @@
             height: 100%;
             object-fit: cover;
         }
-        .profile-picture-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 18px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .profile-picture-container:hover .profile-picture-overlay {
-            opacity: 1;
-        }
         .buttons {
             display: flex;
             justify-content: space-around;
@@ -139,8 +121,8 @@
         .board-container {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center; /* 중앙 정렬로 수정 */
-            gap: 20px; /* 간격 추가 */
+            justify-content: center;
+            gap: 20px;
             width: 100%;
             margin-top: 20px;
         }
@@ -149,7 +131,7 @@
             border: 1px solid #ccc;
             border-radius: 8px;
             padding: 15px;
-            width: calc(25% - 20px); /* 너비 계산 부분 수정 */
+            width: calc(25% - 20px);
             margin-bottom: 20px;
             box-sizing: border-box;
         }
@@ -190,7 +172,8 @@
 <div class="container">
     <div class="card">
         <div class="profile-picture-container" id="profilePictureContainer">
-            <img class="profile-picture" id="profilePicture"  th:src = "${user.getProfileImage().getFilePath()}">
+            <img class="profile-picture" id="profilePicture" th:if="${user.profileImage == null}" src="https://cdn-icons-png.flaticon.com/512/1902/1902960.png" alt="Default Profile Picture">
+            <img class="profile-picture" id="profilePicture" th:if="${user.profileImage != null}" th:src="@{'/' + ${user.profileImage.filePath}}" alt="Profile Picture">
         </div>
         <h2>내 정보</h2>
         <p>아이디: <span th:text="${user.username}">사용자 이름</span></p>
@@ -231,7 +214,6 @@
         }
     }
 
-
     function handleFormSubmit(event) {
         event.preventDefault();
         var form = event.target;
@@ -244,9 +226,9 @@
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            return response.json(); // JSON 형식으로 응답을 파싱
+            return response.json();
         }).then(data => {
-            console.log(data.message); // "File uploaded successfully" 출력
+            console.log(data.message);
         }).catch(error => {
             console.error('Error:', error);
         });

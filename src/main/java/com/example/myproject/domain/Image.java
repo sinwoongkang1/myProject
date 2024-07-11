@@ -26,5 +26,4 @@ public class Image {
     @Column(name = "data", columnDefinition="LONGBLOB")
     private byte[] data;
 
-
 }
