@@ -53,6 +53,9 @@ public class Board {
     @Column(name = "temporary")
     private boolean temporary;
 
+    @OneToOne(mappedBy = "board", cascade = CascadeType.ALL)
+    private Photo photo;
+
     public Board() {
         this.writeTime = new Date();
         this.temporary = false;

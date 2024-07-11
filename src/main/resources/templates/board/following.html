@@ -76,7 +76,6 @@
       width: 300px;
       height: 360px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      position: relative;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -101,6 +100,9 @@
       justify-content: space-between;
       align-items: flex-start;
       margin-top: auto;
+
+      /* 수정된 부분: 프로필 사진과 여백을 맞추기 위해 추가 */
+      margin-left: 60px; /* 프로필 사진의 너비 + 여백만큼 왼쪽으로 이동 */
     }
 
     .card .meta-info span {
@@ -112,7 +114,31 @@
       color: #007BFF;
       align-self: flex-end;
     }
+    .card-content {
+      display: flex;
+      flex-direction: column;
+      height: 100%; /* 카드 내부를 꽉 채우기 위해 추가 */
+    }
 
+    .profile-and-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .author-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .author-info .author,
+    .author-info .write-date {
+      font-size: 12px;
+      color: #999;
+      margin-top: 5px;
+      margin-right: 5px;
+    }
     .card a {
       text-decoration: none;
       color: #007BFF;
@@ -121,6 +147,18 @@
       display: block;
       align-self: flex-end;
       margin-top: 10px;
+    }
+    .profile-picture-container {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .profile-picture {
+      width: 80%;
+      height: 80%;
+      object-fit: cover;
     }
   </style>
 </head>
@@ -145,16 +183,24 @@
 <div class="container">
   <div id="sortedCards" style="display: flex; flex-wrap: wrap; justify-content: flex-start;">
     <div th:each="board : ${boards}" class="card" th:if="${__counter__ < 5}">
-      <h2 th:text="${board.title}">제목</h2>
-      <p th:text="${board.content}">내용</p>
-      <div class="meta-info">
-        <span>작성자: <span th:text="${board.user.username}">사용자</span></span>
-        <span>작성일: <span th:text="${board.writeTime}">2024-06-21 13:37</span></span>
+      <div class="card-content">
+        <h2 th:text="${board.title}">제목</h2>
+        <p th:text="${board.content}">내용</p>
+        <div class="likes">
+          ♡ <span th:text="${board.liked}">0</span>
+        </div>
+        <div class="profile-and-info">
+          <div class="profile-picture-container">
+            <img class="profile-picture" th:if="${board.user.profileImage == null}" src="https://cdn-icons-png.flaticon.com/512/1902/1902960.png" alt="Default Profile Picture">
+            <img class="profile-picture" th:if="${board.user.profileImage != null}" th:src="@{'/' + ${board.user.profileImage.filePath}}" alt="Profile Picture">
+          </div>
+          <div class="author-info">
+            <span class="author"><span th:text="${board.user.username}">사용자</span></span>
+            <span class="write-date">작성일: <span th:text="${board.writeTime}"></span></span>
+          </div>
+        </div>
+        <a th:href="@{/BBelog/profile/{username}/{id}(username=${board.user.username}, id=${board.id})}">자세히 보기</a>
       </div>
-      <div class="likes">
-        ♡ <span th:text="${board.liked}">0</span>
-      </div>
-      <a th:href="@{/BBelog/profile/{username}/{id}(username=${board.user.username}, id=${board.id})}">자세히 보기</a>
     </div>
   </div>
 </div>

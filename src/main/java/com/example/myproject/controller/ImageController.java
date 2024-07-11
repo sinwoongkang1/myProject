@@ -38,7 +38,7 @@ private final UserService userService;
             String filePath = "images/" + image.getFileName();
             image.setFilePath(filePath);
 
-            // 파일 저장 경로
+
             String uploadDir = new File("src/main/resources/static/images").getAbsolutePath();
             file.transferTo(new File(uploadDir + "/" + image.getFileName()));
 

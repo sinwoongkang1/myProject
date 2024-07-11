@@ -2,8 +2,10 @@ package com.example.myproject.controller;
 
 import com.example.myproject.config.FileUploadProperties;
 import com.example.myproject.domain.Board;
+import com.example.myproject.domain.Photo;
 import com.example.myproject.domain.User;
 import com.example.myproject.service.BoardService;
+import com.example.myproject.service.PhotoService;
 import com.example.myproject.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +31,8 @@ import java.util.List;
 public class BoardController {
     private final BoardService boardService;
     private final UserService userService;
+    private final PhotoService photoService;
+    private static String UPLOADED_FOLDER = "/Users/kang/Documents/myProject/src/main/resources/static/photos";
 
     @GetMapping("/write")
     public String write() {
