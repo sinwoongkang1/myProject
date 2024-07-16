@@ -105,6 +105,7 @@ public class BoardController {
                           @CookieValue(value = "username", defaultValue = "") String cookieUsername,
                           Model model) {
         User user = userService.findUserByUsername(username);
+        User writer = userService.findUserByUsername(cookieUsername);
         Board board = boardService.findByUsernameAndBoardIdAndTemporaryFalse(username, id);
         Set<Comment> comments = commentService.findAllByBoardId(id);
 
@@ -112,6 +113,7 @@ public class BoardController {
         model.addAttribute("id", id);
         model.addAttribute("board", board);
         model.addAttribute("comments", comments);
+        model.addAttribute("writer", writer);
 
 
         if (username.equals(cookieUsername)) {

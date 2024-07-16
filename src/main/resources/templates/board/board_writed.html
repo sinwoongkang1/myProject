@@ -47,15 +47,52 @@
             padding: 20px;
             z-index: 1;
         }
-        .post-card, .profile-card, .comment-card {
-            background-color: rgba(248, 249, 250, 0.9); /* 투명 배경 */
+        .comment-card, .profile-card {
+            background-color: rgba(248, 249, 250, 0.9);
             border: 1px solid #ccc;
             border-radius: 8px;
             padding: 20px;
-            width: 900px; /* 가로 크기 0.5배 늘림 */
+            width: 900px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             position: relative;
+            margin: auto;
+        }
+
+        .comment-card {
+            height: auto;
+        }
+
+        .profile-card {
+            margin-top: 20px;
+            height: 200px; /* 예시로 높이 설정 */
+        }
+
+        .profile-card .profile-card-inner {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* 가운데 정렬 */
+            text-align: left;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: left;
+        }
+
+        .post-card {
+            background-color: rgba(248, 249, 250, 0.9);
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            width: 900px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            position: relative;
+
         }
         .post-card {
             height: 450px; /* 세로로 3배 길어짐 */
@@ -82,13 +119,7 @@
             text-align: center;
             margin-bottom: 10px;
         }
-        .profile-card {
-            height: 150px; /* 세로 크기를 절반으로 줄임 */
-            display: flex;
-            align-items: center;
-            text-align: left;
-            flex-direction: column;
-        }
+
         .profile-card-inner {
             display: flex;
             width: 100%;
@@ -130,11 +161,6 @@
         }
         .buttons button:hover, .profile-buttons button:hover {
             background-color: #333;
-        }
-        .comment-card {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
         }
         .comment-input {
             width: 100%;
@@ -196,23 +222,22 @@
             </form>
         </div>
     </div>
-
-<!--    <div class="comment-list" id="commentList">-->
-<!--        <div th:each="comment : ${comments}" class="comment">-->
-<!--            <img class="profile-picture" th:if="${comment.commenter.profileImage.filePath == null}" src="https://cdn-icons-png.flaticon.com/512/1902/1902960.png" alt="Default Profile Picture">-->
-<!--            <img class="profile-picture" th:if="${comment.commenter.profileImage.filePath != null}" th:src="@{'/' + ${comment.commenter.profileImage.filePath}}" alt="Profile Picture">-->
-<!--            <div class="comment-content">-->
-<!--                <div class="comment-meta">-->
-<!--                    <span th:text="${comment.commenter.username}">사용자</span>-->
-<!--                    <span th:text="${comment.date}">댓글 작성일</span>-->
-<!--                </div>-->
-<!--                <div th:text="${comment.content}">댓글 내용</div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
 </div>
 
     <div class="comment-card">
+        <div class="comment-list" id="commentList">
+            <div th:each="comment : ${comments}" class="comment">
+                <img class="profile-picture" th:if="${writer.profileImage.filePath == null}" src="https://cdn-icons-png.flaticon.com/512/1902/1902960.png" alt="Default Profile Picture">
+                <img class="profile-picture" th:if="${writer.profileImage.filePath != null}" th:src="@{'/' + ${writer.profileImage.filePath}}" alt="Profile Picture">
+                <div class="comment-content">
+                    <div class="comment-meta">
+                        <span th:text="${writer.getUsername()}">사용자</span>
+                        <span th:text="${comment.getWriteTime()}">댓글 작성일</span>
+                    </div>
+                    <div th:text="${comment.content}">댓글 내용</div>
+                </div>
+            </div>
+        </div>
         <form id="commentForm" method="post" th:action="@{'/BBelog/comment/' + ${user.username} + '/' + ${board.id}}">
             <textarea class="comment-input" name="commentContent" placeholder="한 번 등록하신 댓글은 수정과 삭제가 되지 않습니다..."></textarea>
             <input type="hidden" id="username" name="username" th:value="${user.username}">
