@@ -158,7 +158,10 @@
 
 <div class="container">
     <div class="card">
-        <div class="profile-picture"></div>
+        <div class="profile-picture-container" id="profilePictureContainer">
+            <img class="profile-picture" id="profilePicture" th:if="${user.profileImage == null}" src="https://cdn-icons-png.flaticon.com/512/1902/1902960.png" alt="Default Profile Picture">
+            <img class="profile-picture" id="profilePicture" th:if="${user.profileImage != null}" th:src="@{'/' + ${user.profileImage.filePath}}" alt="Profile Picture">
+        </div>
         <h2>내 정보</h2>
         <p>아이디: <span th:text="${user.username}">사용자 이름</span></p>
         <p>이메일: <span th:text="${user.email}">사용자 이메일</span></p>

@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -56,6 +57,9 @@ public class Board {
     @OneToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private Photo photo;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
     public Board() {
         this.writeTime = new Date();

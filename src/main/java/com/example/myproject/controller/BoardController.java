@@ -1,8 +1,10 @@
 package com.example.myproject.controller;
 
 import com.example.myproject.domain.Board;
+import com.example.myproject.domain.Comment;
 import com.example.myproject.domain.User;
 import com.example.myproject.service.BoardService;
+import com.example.myproject.service.CommentService;
 import com.example.myproject.service.PhotoService;
 import com.example.myproject.service.UserService;
 import jakarta.servlet.http.Cookie;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 
 @Controller
@@ -22,8 +25,9 @@ import java.util.List;
 public class BoardController {
     private final BoardService boardService;
     private final UserService userService;
-    private final PhotoService photoService;
-    private static String UPLOADED_FOLDER = "/Users/kang/Documents/myProject/src/main/resources/static/photos";
+    private final CommentService commentService;
+
+
 
     @GetMapping("/write")
     public String write() {
@@ -102,9 +106,13 @@ public class BoardController {
                           Model model) {
         User user = userService.findUserByUsername(username);
         Board board = boardService.findByUsernameAndBoardIdAndTemporaryFalse(username, id);
+        Set<Comment> comments = commentService.findAllByBoardId(id);
+
         model.addAttribute("user", user);
         model.addAttribute("id", id);
         model.addAttribute("board", board);
+        model.addAttribute("comments", comments);
+
 
         if (username.equals(cookieUsername)) {
             return "/board/board_writed_me";

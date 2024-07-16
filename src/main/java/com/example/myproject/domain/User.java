@@ -47,6 +47,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Board> boards;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
     @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL)
     private List<Following> following; //내가 팔로잉 하는 사람
 
