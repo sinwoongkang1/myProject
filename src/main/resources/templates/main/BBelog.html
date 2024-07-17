@@ -192,7 +192,7 @@
                 <p th:text="${board.content}">내용</p>
                 <img src="https://health.chosun.com/site/data/img_dir/2019/12/20/2019122002474_0.jpg" alt="Example Image">
                 <div class="likes">
-                    ♡ <span th:text="${board.liked}">0 </span>
+                    ♡ <span th:text="${board.getLiked()}">0 </span>
                     💬 <span th:text="${board.getComments().size()}">0</span>
                 </div>
                 <div class="profile-and-info">

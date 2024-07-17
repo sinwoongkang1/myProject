@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원가입</title>
+    <title>회원 정보 수정</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -78,15 +77,11 @@
         }
     </style>
     <script>
-        function showDuplicateIdPopup() {
-            alert("이미 존재하는 ID입니다. 다른 ID를 사용해주세요.");
-            window.location.href = "/BBelog/join"; // join 페이지로 리다이렉션
-        }
         function showSignupSuccessPopup() {
-            alert("회원가입이 완료되었습니다!");
+            alert("정보가 수정되었습니다!");
         }
 
-        function showPopupAndRedirect(event) {
+        function showPopupAndRedirect(event, action) {
             event.preventDefault();
 
             var password = document.getElementById("password").value;
@@ -97,52 +92,59 @@
                 return false;
             } else {
                 document.getElementById("passwordError").innerText = "";
-                alert("BBelog 회원가입을 진행 하시겠습니까?!");
-                window.location.href = "/BBelog";
-                document.getElementById("signupForm").submit();
+                if (action === 'withdraw') {
+                    alert("회원 탈퇴를 진행하시겠습니까?!");
+                } else {
+                    showSignupSuccessPopup();
+                }
+                var form = document.getElementById(action + "Form");
+                form.submit();
             }
         }
-
     </script>
 </head>
 <body>
 <div class="container">
     <div class="left"></div>
     <div class="right">
-        <h2>회원가입</h2>
+        <h2>회원 정보 수정</h2>
         <div th:if="${error}">
-            <script th:inline="javascript">
-                showDuplicateIdPopup();
-            </script>
         </div>
-        <form id="signupForm" action="/BBelog/join" method="post" onsubmit="showPopupAndRedirect(event)">
+
+
+        <form id="updateForm" action="/BBelog/editUser" method="post" onsubmit="showPopupAndRedirect(event, 'update')">
             <div class="form-group">
-                <label for="username">사용자 ID:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="email">이메일:</label>
+                <label for="email">변경할 이메일:</label>
                 <input type="email" id="email" name="email" required>
             </div>
             <div class="form-group">
-                <label for="password">비밀번호:</label>
+                <label for="password">변경할 비밀번호:</label>
                 <input type="password" id="password" name="password" required>
             </div>
             <div class="form-group">
-                <label for="confirmPassword">비밀번호 확인:</label>
+                <label for="confirmPassword">변경할 비밀번호 확인:</label>
                 <input type="password" id="confirmPassword" name="confirmPassword" required>
                 <span id="passwordError" class="error-message"></span>
             </div>
             <div class="form-group">
-                <label for="wantedWeight">희망 몸무게:</label>
+                <label for="wantedWeight">변경할 희망 몸무게:</label>
                 <input type="text" id="wantedWeight" name="wantedWeight">
             </div>
             <div class="form-group">
-                <button type="submit">가입하기</button>
-                <p></p>
-                <button class="attach-button" type="button" onclick="window.location.href='http://localhost:8080/BBelog'">홈으로</button>
+                <button type="submit">변경하기</button>
             </div>
         </form>
+
+        <form id="withdrawForm" action="/BBelog/withdraw" method="post" onsubmit="showPopupAndRedirect(event, 'withdraw')">
+            <div class="form-group">
+                <button type="submit">탈퇴하기</button>
+            </div>
+        </form>
+
+
+        <div class="form-group">
+            <button class="attach-button" type="button" onclick="window.location.href='http://localhost:8080/BBelog'">홈으로</button>
+        </div>
     </div>
 </div>
 </body>

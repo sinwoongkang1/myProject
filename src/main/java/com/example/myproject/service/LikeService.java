@@ -16,8 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LikeService {
     private final LikeRepository likeRepository;
-    private final UserRepository userRepository;
-    private final BoardRepository boardRepository;
 
     public void likeBoard(User user, Board board) {
         Liked liked = new Liked();

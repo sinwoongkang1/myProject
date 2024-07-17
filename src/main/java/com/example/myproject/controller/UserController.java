@@ -3,9 +3,7 @@ package com.example.myproject.controller;
 import com.example.myproject.domain.Admin;
 import com.example.myproject.domain.Board;
 import com.example.myproject.domain.User;
-import com.example.myproject.service.AdminService;
-import com.example.myproject.service.BoardService;
-import com.example.myproject.service.UserService;
+import com.example.myproject.service.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -27,6 +25,8 @@ public class UserController {
     private final UserService userService;
     private final AdminService adminService;
     private final BoardService boardService;
+    private final LikeService likeService;
+    private final CommentService commentService;
 
     @GetMapping
     public String BBelogIndex(Model model) {
@@ -49,7 +49,7 @@ public class UserController {
             userService.saveUser(user);
             Admin admin = new Admin(user);
             adminService.saveAdmin(admin);
-            return "redirect:/BBelog";
+            return "redirect:/BBelog/login";
         }
     }
 
@@ -100,7 +100,28 @@ public class UserController {
         model.addAttribute("boards", boards);
         model.addAttribute("cal", cal);
         return "/main/profile";
-
+    }
+    @GetMapping("/editUser")
+    public String editUser(Model model, @CookieValue(value = "username", defaultValue = "") String username) {
+        User user = userService.findUserByUsername(username);
+        model.addAttribute("user", user);
+        return "/main/editUser";
+    }
+    @PostMapping("/editUser")
+    public String editUser(@ModelAttribute User user,
+                           @CookieValue(value = "username", defaultValue = "") String username) {
+        User user1 = userService.findUserByUsername(username);
+        user1.setPassword(user.getPassword());
+        user1.setEmail(user.getEmail());
+        user1.setWantedWeight(user.getWantedWeight());
+        userService.saveUser(user1);
+        return "redirect:/BBelog/profile";
+    }
+    @PostMapping("/withdraw")
+    public String withdraw(@ModelAttribute User user,
+                           @CookieValue(value = "username", defaultValue = "") String username) {
+        userService.deleteAllByUsername(username);
+    return "redirect:/BBelog";
     }
 }
 

@@ -13,4 +13,5 @@ import java.util.Set;
 public interface CommentRepository extends JpaRepository<Comment,Long> {
     List<Comment> findAllByBoardId(Long boardId);
     void deleteAllByBoard(Board board);
+    void deleteByUser(User user);
 }

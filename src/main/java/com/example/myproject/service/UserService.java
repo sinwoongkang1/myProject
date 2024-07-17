@@ -1,9 +1,10 @@
 package com.example.myproject.service;
 
 import com.example.myproject.domain.User;
-import com.example.myproject.repository.UserRepository;
+import com.example.myproject.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -11,6 +12,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final FollowRepository followRepository;
+    private final LikeRepository likeRepository;
+    private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
 
     //가입한 user DB 에 저장하기
     public void saveUser(User user) {
@@ -35,4 +40,17 @@ public User findById(Long id) {
         return userRepository.findById(id).orElse(null);
 }
 
+@Transactional
+public void deleteAllByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            followRepository.deleteByFollower(user);
+            followRepository.deleteByFollowee(user);
+            likeRepository.deleteByUser(user);
+            commentRepository.deleteByUser(user);
+            boardRepository.deleteByUser(user);
+            userRepository.deleteAllByUsername(username);
+        }
+
+}
 }

@@ -18,6 +18,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Board findByTitle(String title);
     Board save(Board board);
     void deleteByTitle(String title);
+    void deleteByUser(User user);
     List<Board> findBoardByUser(User user);
     List<Board> findAll();
     List<Board> findByTemporaryFalse();
