@@ -151,7 +151,7 @@
   <div class="card">
     <h2>글쓰기 페이지</h2>
 
-    <form action="/BBelog/write" method="post">
+    <form id="publishForm" action="/BBelog/write" method="post">
       <input type="hidden" id="username" name="username" value="${session.username}">
       <div class="form-group">
         <label for="title">제목:</label>
@@ -161,11 +161,20 @@
         <label for="content">내용:</label>
         <textarea id="content" name="content" rows="4" cols="50"></textarea>
       </div>
-      <button class="attach-button" type="button" onclick="window.location.href='http://localhost:8080/BBelog'">홈으로</button>
-      <button class="attach-button" type="button">사진 첨부하기</button>
-      <button class="attach-button" type="button" onclick="saveTemporary()">임시 저장하기</button>
       <button class="publish-button" type="submit">출간하기</button>
     </form>
+
+    <div id="uploadPhotoForm">
+      <form id="PhotoForm" action="/BBelog/uploadPhoto" method="post" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)">
+        <input type="file" name="file" accept="image/*" required>
+        <input type="hidden" name="username" value="${session.username}">
+        <button type="submit">업로드</button>
+      </form>
+    </div>
+
+    <button class="attach-button" type="button" onclick="window.location.href='http://localhost:8080/BBelog'">홈으로</button>
+    <button class="attach-button" type="button" onclick="saveTemporary()">임시 저장하기</button>
+
 
   </div>
 </div>
@@ -198,6 +207,25 @@
       window.location.href = "/BBelog/logout";
     }
   }
+  // function handleFormSubmit(event) {
+  //   event.preventDefault();
+  //   var form = event.target;
+  //   var formData = new FormData(form);
+  //
+  //   fetch('/BBelog/uploadPhoto', {
+  //     method: 'POST',
+  //     body: formData
+  //   }).then(response => {
+  //     if (!response.ok) {
+  //       throw new Error('Network response was not ok');
+  //     }
+  //     return response.json();
+  //   }).then(data => {
+  //     console.log(data.message);
+  //   }).catch(error => {
+  //     console.error('Error:', error);
+  //   });
+  // }
 </script>
 
 </body>

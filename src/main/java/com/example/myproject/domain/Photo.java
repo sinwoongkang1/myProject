@@ -15,12 +15,18 @@ public class Photo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    @OneToOne(mappedBy = "photo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Board board;
+    @Column(name = "file_name")
+    private String fileName;
 
     @Column(name = "file_path", nullable = false)
     private String filePath;
+
+    @Column(name = "file_type")
+    private String fileType;
+
+    @Lob
+    @Column(name = "data", columnDefinition="LONGBLOB")
+    private byte[] data;
 
     public Photo(String string) {
         this.filePath = string;

@@ -1,8 +1,12 @@
 package com.example.myproject.controller;
 
+import com.example.myproject.domain.Board;
 import com.example.myproject.domain.Image;
+import com.example.myproject.domain.Photo;
 import com.example.myproject.domain.User;
+import com.example.myproject.service.BoardService;
 import com.example.myproject.service.ImageService;
+import com.example.myproject.service.PhotoService;
 import com.example.myproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,19 +24,19 @@ import java.io.IOException;
 @RequestMapping("/BBelog")
 @RequiredArgsConstructor
 public class ImageController {
-
+private final PhotoService photoService;
+private final BoardService boardService;
 private final ImageService imageService;
 private final UserService userService;
 
     @PostMapping("/uploadProfilePicture")
-    public ResponseEntity<String> uploadProfilePicture(@RequestParam("file") MultipartFile file,
+    public String uploadProfilePicture(@RequestParam("file") MultipartFile file,
                                                        @CookieValue(value = "username", defaultValue = "") String username,
                                                        Model model) {
         if (username.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is missing in the cookie");
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is missing in the cookie");
         }
         try {
-
             Image image = imageService.saveImage(file);
             User user = userService.findByUsername(username);
             String filePath = "images/" + image.getFileName();
@@ -45,19 +49,65 @@ private final UserService userService;
             user.setProfileImage(image);
             userService.saveUser(user);
             model.addAttribute("user", user);
-            return ResponseEntity.status(HttpStatus.OK).body(filePath);
-
+            ResponseEntity.status(HttpStatus.OK).body(filePath);
+            return "redirect:/BBelog/profile/";
 
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload profile picture");
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload profile picture");
         }
+        return "redirect:/BBelog/profile/";
     }
 
-    @GetMapping("/profilePicture/{id}")
+//    @GetMapping("/profilePicture/{id}")
+//    @ResponseBody
+//    public byte[] getProfilePicture(@PathVariable Long id) {
+//        Image image = imageService.getImage(id);
+//        return image.getData();
+//    }
+
+    @PostMapping("/uploadPhoto")
+    public String uploadPhoto (@RequestParam("file") MultipartFile file,
+                               @CookieValue(value = "username", defaultValue = "") String username,
+                               @ModelAttribute Board board,
+                               Model model) {
+        System.out.println(":::::::::::::::::::::::::::::::::::::::::::::"+file.getOriginalFilename());
+        System.out.println(file.getContentType());
+        if (username.isEmpty()) {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is missing in the cookie");
+        }
+        try {
+            User user = userService.findByUsername(username);
+            Photo photo = photoService.savePhoto(file);
+
+            board.setPhoto(photo);
+            board.setTitle("temporary");
+            board.setContent("temporary");
+            board.setUser(user);
+            boardService.save(board);
+
+
+            String filePath = "photos/" + photo.getFileName();
+            photo.setFilePath(filePath);
+
+
+            String uploadDir = new File("photos").getAbsolutePath();
+            file.transferTo(new File(uploadDir + "/" + photo.getFileName()));
+
+            board.setPhoto(photo);
+            boardService.save(board);
+            model.addAttribute("board", board);
+            ResponseEntity.status(HttpStatus.OK).body(filePath);
+            return "redirect:/BBelog/write";
+
+        } catch (IOException e) {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload profile picture");
+        }
+        return "redirect:/BBelog/write";
+    }
+    @GetMapping("/photos/{id}")
     @ResponseBody
-    public byte[] getProfilePicture(@PathVariable Long id) {
-        Image image = imageService.getImage(id);
-        return image.getData();
+    public byte[] getContentPhoto(@PathVariable Long id) {
+        Photo photo = photoService.getPhotoById(id);
+        return photo.getData();
     }
-
 }

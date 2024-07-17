@@ -46,6 +46,7 @@
             align-items: center;
             padding: 20px;
             z-index: 1;
+            overflow: hidden;
         }
         .comment-card, .profile-card {
             background-color: rgba(248, 249, 250, 0.9);
@@ -87,13 +88,16 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             position: relative;
+            overflow: hidden; /* overflow 설정 */
+
 
         }
         .post-card {
-            height: 450px; /* 세로로 3배 길어짐 */
+            height: 500px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            overflow: hidden;
         }
         .post-title {
             text-align: center;
@@ -202,6 +206,12 @@
             font-size: 14px;
             color: #999;
         }
+        .contentPhoto {
+            max-width: 45%;
+            max-height: 45%;;
+            display: block;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
@@ -217,6 +227,8 @@
 <div class="container">
     <div class="post-card">
         <div class="post-title" th:text="${board.title}">제목</div>
+        <img class="contentPhoto" th:if="${board.getPhoto() == null}" src="https://cdn-icons-png.flaticon.com/512/1902/1902960.png" alt="Default Profile Picture">
+        <img class="contentPhoto" th:if="${board.getPhoto() != null}" th:src="@{'/' + ${board.photo.filePath}}" alt="Content Picture">
         <div class="post-content" th:text="${board.content}">내용</div>
         <div class="meta-info">♡ <span th:text="${board.liked}">0</span></div>
         <div class="meta-info">작성 : <span th:text="${board.getWriteTime()}">0</span></div>

@@ -33,7 +33,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("SELECT b FROM Board b WHERE b.user.username = :username AND b.id = :id AND b.temporary = true")
     Board findByUsernameAndBoardIdAndTemporaryTrue(@Param("username") String username, @Param("id") Long id);
 
-
+    Board findBoardByUserIdAndContent(Long userId, String content);
 
     @Modifying
     @Transactional
@@ -46,4 +46,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Long findAuthorIdByBoardId(Long boardId);
 
     List<Board> findByUserIdIn(List<Long> userIds);
+
 }

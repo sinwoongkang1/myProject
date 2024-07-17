@@ -15,7 +15,6 @@ import java.util.List;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
-    private final FollowRepository followRepository;
 
 
     public Board findById(Long id){
@@ -25,7 +24,6 @@ public class BoardService {
     public void save(Board board) {
         boardRepository.save(board);
     }
-
 
     public Board findBoardByTitle(String title) {
         return boardRepository.findByTitle(title);
@@ -44,6 +42,9 @@ public class BoardService {
 
     public Board findByUsernameAndBoardIdAndTemporaryTrue(String username,Long id) {
         return boardRepository.findByUsernameAndBoardIdAndTemporaryTrue(username,id);
+    }
+    public Board findBoardByUserIdAndContent(Long userId,String content) {
+        return boardRepository.findBoardByUserIdAndContent(userId,content);
     }
 
     public List<Board> findByTemporaryFalse(){
@@ -79,9 +80,6 @@ public class BoardService {
 
     public List<Board> findBoardByUserId (Long id) {
     return boardRepository.findBoardByUserId(id);}
-
-
-
 
 
 }

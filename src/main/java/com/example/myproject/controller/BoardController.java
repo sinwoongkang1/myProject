@@ -2,6 +2,7 @@ package com.example.myproject.controller;
 
 import com.example.myproject.domain.Board;
 import com.example.myproject.domain.Comment;
+import com.example.myproject.domain.Photo;
 import com.example.myproject.domain.User;
 import com.example.myproject.service.*;
 import jakarta.servlet.http.Cookie;
@@ -23,12 +24,13 @@ public class BoardController {
     private final UserService userService;
     private final CommentService commentService;
     private final LikeService likeService;
+    private final PhotoService photoService;
     @GetMapping("/write")
     public String write() {
         return "/board/write";
     }
     @PostMapping("/write")
-    public String write(@ModelAttribute Board board, HttpServletRequest request) {
+    public String write(@ModelAttribute Board board, HttpServletRequest request,Model model) {
         Cookie[] cookies = request.getCookies();
         String username = null;
         if (cookies != null) {
@@ -41,15 +43,21 @@ public class BoardController {
         }
         if (username != null) {
             User user = userService.findUserByUsername(username);
-            if (user != null) {
+            Board savedBoard = boardService.findBoardByUserIdAndContent(user.getId(),"temporary");
+            if (user != null && savedBoard == null) {
                 board.setUser(user);
                 boardService.save(board);
                 return "redirect:/BBelog/profile";
             } else {
-                return "redirect:/BBelog/login";
+                savedBoard.setUser(user);
+                savedBoard.setTitle(board.getTitle());
+                savedBoard.setContent(board.getContent());
+                boardService.save(savedBoard);
+                model.addAttribute("board", board);
+                return "redirect:/BBelog/profile";
             }
         } else {
-            return "redirect:/BBelog/login";
+            return "redirect:/BBelog/profile";
         }
     }
     @PostMapping("/saveTemporary")
