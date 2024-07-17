@@ -22,4 +22,5 @@ public interface LikeRepository extends JpaRepository<Liked,Long> {
     @Query("SELECT l.board FROM Liked l WHERE l.user.id = :userId")
     List<Board> findBoardsLikedByUser(@Param("userId") Long userId);
 
+    void deleteAllByBoard(Board board);
 }

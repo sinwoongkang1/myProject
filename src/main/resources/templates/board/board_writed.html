@@ -58,31 +58,26 @@
             position: relative;
             margin: auto;
         }
-
         .comment-card {
             height: auto;
         }
-
         .profile-card {
             margin-top: 20px;
-            height: 200px; /* 예시로 높이 설정 */
+            height: 200px;
         }
-
         .profile-card .profile-card-inner {
             width: 100%;
             display: flex;
             align-items: center;
-            justify-content: center; /* 가운데 정렬 */
+            justify-content: center;
             text-align: left;
         }
-
         .profile-info {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: left;
         }
-
         .post-card {
             background-color: rgba(248, 249, 250, 0.9);
             border: 1px solid #ccc;
@@ -119,7 +114,6 @@
             text-align: center;
             margin-bottom: 10px;
         }
-
         .profile-card-inner {
             display: flex;
             width: 100%;
@@ -184,11 +178,9 @@
             margin-right: 10px;
         }
         .comment-content {
-            background-color: #fff;
-            border-radius: 5px;
+            background-color: rgba(248, 249, 250, 0);
             padding: 10px;
             width: 100%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .comment-meta {
             font-size: 14px;
@@ -197,7 +189,6 @@
     </style>
 </head>
 <body>
-
 <header class="header">
     <a href="http://localhost:8080/BBelog" class="logo">BBelog</a>
     <div class="right-links">
@@ -207,7 +198,6 @@
         <a th:if="${session.username != null}" href="http://localhost:8080/BBelog/profile">내 정보</a>
     </div>
 </header>
-
 <div class="container">
     <div class="post-card">
         <div class="post-title" th:text="${board.title}">제목</div>
@@ -223,15 +213,14 @@
         </div>
     </div>
 </div>
-
     <div class="comment-card">
         <div class="comment-list" id="commentList">
             <div th:each="comment : ${comments}" class="comment">
-                <img class="profile-picture" th:if="${writer.profileImage.filePath == null}" src="https://cdn-icons-png.flaticon.com/512/1902/1902960.png" alt="Default Profile Picture">
-                <img class="profile-picture" th:if="${writer.profileImage.filePath != null}" th:src="@{'/' + ${writer.profileImage.filePath}}" alt="Profile Picture">
+                <img class="profile-picture" th:if="${comment.getUser().getProfileImage() == null}" src="https://cdn-icons-png.flaticon.com/512/1902/1902960.png" alt="Default Profile Picture">
+                <img class="profile-picture" th:if="${comment.getUser().getProfileImage() != null}" th:src="@{'/' + ${comment.getUser().getProfileImage().getFilePath()}}" alt="Profile Picture">
                 <div class="comment-content">
                     <div class="comment-meta">
-                        <span th:text="${writer.getUsername()}">사용자</span>
+                        <span th:text="${comment.getUser().getUsername()}">사용자</span>
                         <span th:text="${comment.getWriteTime()}">댓글 작성일</span>
                     </div>
                     <div th:text="${comment.content}">댓글 내용</div>
@@ -239,7 +228,7 @@
             </div>
         </div>
         <form id="commentForm" method="post" th:action="@{'/BBelog/comment/' + ${user.username} + '/' + ${board.id}}">
-            <textarea class="comment-input" name="commentContent" placeholder="한 번 등록하신 댓글은 수정과 삭제가 되지 않습니다..."></textarea>
+            <textarea class="comment-input" name="commentContent" placeholder="한 번 등록하신 댓글은 수정과 삭제가 되지 않습니다^^ 바른말 고운말을 사용합시다^^"></textarea>
             <input type="hidden" id="username" name="username" th:value="${user.username}">
             <input type="hidden" name="boardId" th:value="${board.id}">
             <div class="buttons">
@@ -247,7 +236,6 @@
             </div>
         </form>
     </div>
-
     <div class="profile-card">
         <div class="profile-card-inner">
             <img class="profile-picture" id="profilePicture" th:if="${user.profileImage == null}" src="https://cdn-icons-png.flaticon.com/512/1902/1902960.png" alt="Default Profile Picture">
@@ -268,17 +256,13 @@
         </div>
     </div>
 </div>
-
 <script>
-
     function confirmLogout(event) {
         event.preventDefault();
         if (confirm("정말 로그아웃 하시겠습니까?")) {
             window.location.href = "/BBelog/logout";
         }
     }
-
 </script>
-
 </body>
 </html>

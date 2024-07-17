@@ -3,10 +3,7 @@ package com.example.myproject.controller;
 import com.example.myproject.domain.Board;
 import com.example.myproject.domain.Comment;
 import com.example.myproject.domain.User;
-import com.example.myproject.service.BoardService;
-import com.example.myproject.service.CommentService;
-import com.example.myproject.service.PhotoService;
-import com.example.myproject.service.UserService;
+import com.example.myproject.service.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -26,14 +23,11 @@ public class BoardController {
     private final BoardService boardService;
     private final UserService userService;
     private final CommentService commentService;
-
-
-
+    private final LikeService likeService;
     @GetMapping("/write")
     public String write() {
         return "/board/write";
     }
-
     @PostMapping("/write")
     public String write(@ModelAttribute Board board, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
@@ -59,7 +53,6 @@ public class BoardController {
             return "redirect:/BBelog/login";
         }
     }
-
     @PostMapping("/saveTemporary")
     public String saveTemporary(@RequestBody Board board, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
@@ -85,8 +78,6 @@ public class BoardController {
             return "redirect:/BBelog/login";
         }
     }
-
-
     @GetMapping("/temporary")
     public String getTemporaryBoards(Model model, @CookieValue(value = "username", defaultValue = "") String username) {
         if (username.isEmpty()) {
@@ -99,30 +90,23 @@ public class BoardController {
         model.addAttribute("boards", temporaryBoards);
         return "/temporary/temporary_list";
     }
-
     @GetMapping("/profile/{username}/{id}")
     public String profile(@PathVariable String username, @PathVariable Long id,
                           @CookieValue(value = "username", defaultValue = "") String cookieUsername,
                           Model model) {
         User user = userService.findUserByUsername(username);
-        User writer = userService.findUserByUsername(cookieUsername);
         Board board = boardService.findByUsernameAndBoardIdAndTemporaryFalse(username, id);
-        Set<Comment> comments = commentService.findAllByBoardId(id);
-
+        List<Comment> comments = commentService.findAllByBoardId(id);
         model.addAttribute("user", user);
         model.addAttribute("id", id);
         model.addAttribute("board", board);
         model.addAttribute("comments", comments);
-        model.addAttribute("writer", writer);
-
-
         if (username.equals(cookieUsername)) {
             return "/board/board_writed_me";
         } else {
             return "/board/board_writed";
         }
     }
-
     @PostMapping("/delete/{username}/{id}")
     public String deletePost(@PathVariable String username, @PathVariable Long id, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
@@ -139,12 +123,13 @@ public class BoardController {
         if (username.equals(cookieUsername)) {
             Board board = boardService.findByUsernameAndBoardIdAndTemporaryFalse(username, id);
             if (board != null) {
+                likeService.deleteAllLikedByBoard(board);
+                commentService.deleteAllByBoard(board);
                 boardService.deleteBoard(board);
             }
         }
         return "redirect:/BBelog";
     }
-
     @GetMapping("/update/{username}/{id}")
     public String updatePost(@PathVariable String username, @PathVariable Long id, Model model) {
         User user = userService.findUserByUsername(username);
@@ -154,7 +139,6 @@ public class BoardController {
         model.addAttribute("board", board);
         return "/board/edit";
     }
-
     @PostMapping("/update/{username}/{id}")
     public String update(@PathVariable String username,
                          @PathVariable Long id,
@@ -170,7 +154,6 @@ public class BoardController {
         }
         return "redirect:/BBelog";
     }
-
     @GetMapping("/temporary/{username}/{id}")
     public String temporary(@PathVariable String username, @PathVariable Long id, Model model) {
         User user = userService.findUserByUsername(username);
@@ -180,7 +163,6 @@ public class BoardController {
         model.addAttribute("board", board);
         return "/temporary/wirted_temporary";
     }
-
     @PostMapping("/temporary/delete/{username}/{id}")
     public String temporaryDelete(@PathVariable String username, @PathVariable Long id, Model model) {
         User user = userService.findUserByUsername(username);
@@ -190,7 +172,6 @@ public class BoardController {
         }
         return "redirect:/BBelog/temporary";
     }
-
     @GetMapping("/temporary/update/{username}/{id}")
     public String temporaryUpdate(@PathVariable String username, @PathVariable Long id, Model model) {
         Board board = boardService.findByUsernameAndBoardIdAndTemporaryTrue(username, id);
@@ -200,13 +181,11 @@ public class BoardController {
         model.addAttribute("board", board);
         return "/temporary/temporary_edit";
     }
-
     @PostMapping("/temporary/update/{username}/{id}")
     public String temporaryUpdate(@PathVariable String username,
                                   @PathVariable Long id,
                                   @RequestParam String title,
-                                  @RequestParam String content,
-                                  Model model) {
+                                  @RequestParam String content) {
         Board board = boardService.findByUsernameAndBoardIdAndTemporaryTrue(username, id);
         if (board != null) {
             board.setTitle(title);
@@ -216,7 +195,6 @@ public class BoardController {
         }
         return "redirect:/BBelog/temporary";
     }
-
     @PostMapping("/temporary/push/{username}/{id}")
     public String temporaryPush(@PathVariable String username,
                                 @PathVariable String id,
@@ -230,13 +208,9 @@ public class BoardController {
             board.setTemporary(false);
             board.setWriteTime(new Date());
             boardService.save(board);
-
             model.addAttribute("board",board);
             model.addAttribute("username", username);
             model.addAttribute("id", id);
-
         return "redirect:/BBelog/profile";
     }
-
-
 }

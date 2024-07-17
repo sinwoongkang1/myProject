@@ -8,6 +8,7 @@ import com.example.myproject.repository.LikeRepository;
 import com.example.myproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -36,5 +37,9 @@ public class LikeService {
     }
     public List<Board> getBoardsLikedByUser(Long userId) {
         return likeRepository.findBoardsLikedByUser(userId);
+    }
+    @Transactional
+    public void deleteAllLikedByBoard(Board board) {
+        likeRepository.deleteAllByBoard(board);
     }
 }

@@ -32,17 +32,16 @@ public class FollowController {
     public String followUser(@PathVariable("username") String username,
                              @PathVariable("id") Long boardId,
                              @CookieValue(value = "username", defaultValue = "") String loggedInUsername) {
-
         if (!loggedInUsername.isEmpty()) {
             boolean isFollowing = followService.isUserFollowingAuthor(boardId, loggedInUsername);
 
-            if (isFollowing) {
-                followService.deleteFollower(boardId, loggedInUsername);
-            } else {
+            if (!isFollowing) {
                 followService.followAuthor(username, loggedInUsername);
+            } else {
+                followService.deleteFollower(boardId, loggedInUsername);
             }
         }
-        return "board/following";
+        return "redirect:/BBelog/following";
     }
 }
 
