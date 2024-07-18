@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -152,8 +155,7 @@ public class BoardController {
     public String update(@PathVariable String username,
                          @PathVariable Long id,
                          @RequestParam String title,
-                         @RequestParam String content,
-                         Model model) {
+                         @RequestParam String content)  {
         Board board = boardService.findByUsernameAndBoardIdAndTemporaryFalse(username, id);
         if (board != null) {
             board.setTitle(title);

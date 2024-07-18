@@ -48,37 +48,6 @@
             z-index: 1;
             overflow: hidden;
         }
-        .comment-card, .profile-card {
-            background-color: rgba(248, 249, 250, 0.9);
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 20px;
-            width: 900px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            position: relative;
-            margin: auto;
-        }
-        .comment-card {
-            height: auto;
-        }
-        .profile-card {
-            margin-top: 20px;
-            height: 200px;
-        }
-        .profile-card .profile-card-inner {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: left;
-        }
-        .profile-info {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: left;
-        }
         .post-card {
             background-color: rgba(248, 249, 250, 0.9);
             border: 1px solid #ccc;
@@ -115,35 +84,17 @@
             text-align: center;
             margin-bottom: 10px;
         }
-        .profile-card-inner {
-            display: flex;
-            width: 100%;
-            align-items: center;
-        }
-        .profile-picture {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background-size: cover;
-            background-position: center;
-            margin-right: 20px;
-        }
-        .profile-info {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
         .profile-info p {
             margin: 5px 0;
             font-size: 18px;
             color: #555;
         }
-        .buttons, .profile-buttons {
+        .buttons {
             display: flex;
             justify-content: center;
             width: 100%;
         }
-        .buttons button, .profile-buttons button {
+        .buttons button, .buttons .button {
             padding: 10px 40px;
             background-color: #555;
             color: white;
@@ -153,40 +104,16 @@
             margin: 10px 1px;
             border: none;
             cursor: pointer;
+            font-size: 16px;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
-        .buttons button:hover, .profile-buttons button:hover {
+        .buttons button:hover, .buttons .button:hover {
             background-color: #333;
         }
-        .comment-input {
-            width: 100%;
-            padding: 10px;
-            font-size: 18px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            margin-bottom: 20px;
-        }
-        .comment-list {
-            width: 100%;
-        }
-        .comment {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 10px;
-        }
-        .comment .profile-picture {
-            width: 50px;
-            height: 50px;
-            margin-right: 10px;
-        }
-        .comment-content {
-            background-color: rgba(248, 249, 250, 0);
-            padding: 10px;
-            width: 100%;
-        }
-        .comment-meta {
-            font-size: 14px;
-            color: #999;
-        }
+
         .contentPhoto {
             max-width: 45%;
             max-height: 45%;;
@@ -210,19 +137,20 @@
         <div class="post-title" th:text="${board.title}">제목</div>
         <img class="contentPhoto" th:if="${board.getPhoto() == null}" src="https://cdn-icons-png.flaticon.com/512/1902/1902960.png" alt="Default Profile Picture">
         <img class="contentPhoto" th:if="${board.getPhoto() != null}" th:src="@{'/' + ${board.getPhoto().getFilePath()}}" alt="ContentPicture">
+        <p></p>
         <div class="post-content" th:text="${board.content}">내용</div>
         <div class="meta-info">작성 : <span th:text="${board.getWriteTime()}">0</span></div>
         <div class="buttons">
-            <a href="http://localhost:8080/BBelog">홈으로</a>
+            <a href="http://localhost:8080/BBelog" class="button">홈으로</a>
             <form th:action="@{/BBelog/temporary/update/{username}/{id} (username=${board.user.username}, id=${board.id})}" method="get">
-                <button type="submit">수정하기</button>
+                <button type="submit" class="button">수정하기</button>
             </form>
-
             <form th:action="@{/BBelog/temporary/delete/{username}/{id} (username=${board.user.username}, id=${board.id})}" method="post">
-                <button type="submit">삭제하기</button>
+                <button type="submit" class="button">삭제하기</button>
             </form>
-
         </div>
+
+
     </div>
 </div>
 

@@ -234,12 +234,17 @@
         }).then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
+                window.location.reload();
+
             }
             return response.json();
         }).then(data => {
             console.log(data.message);
+            window.location.reload();
         }).catch(error => {
             console.error('Error:', error);
+            window.location.reload();
+
         });
     }
 </script>

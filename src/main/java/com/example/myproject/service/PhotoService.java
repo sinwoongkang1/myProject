@@ -1,15 +1,12 @@
 package com.example.myproject.service;
 
-import com.example.myproject.domain.Board;
+
 import com.example.myproject.domain.Photo;
-import com.example.myproject.domain.User;
-import com.example.myproject.repository.BoardRepository;
 import com.example.myproject.repository.PhotoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 
 @Service
@@ -30,4 +27,5 @@ public class PhotoService {
    public Photo getPhotoById(Long id) {
        return photoRepository.findById(id).orElse(null);
    }
+
 }

@@ -58,13 +58,6 @@ private final UserService userService;
         return "redirect:/BBelog/profile/";
     }
 
-//    @GetMapping("/profilePicture/{id}")
-//    @ResponseBody
-//    public byte[] getProfilePicture(@PathVariable Long id) {
-//        Image image = imageService.getImage(id);
-//        return image.getData();
-//    }
-
     @PostMapping("/uploadPhoto")
     public String uploadPhoto (@RequestParam("file") MultipartFile file,
                                @CookieValue(value = "username", defaultValue = "") String username,
@@ -103,10 +96,30 @@ private final UserService userService;
         }
         return "redirect:/BBelog/write";
     }
-//    @GetMapping("/photos/{id}")
-//    @ResponseBody
-//    public byte[] getContentPhoto(@PathVariable Long id) {
-//        Photo photo = photoService.getPhotoById(id);
-//        return photo.getData();
-//    }
+    @PostMapping("/changePhoto")
+    public String changePhoto(@RequestParam("file") MultipartFile file,
+                              @RequestParam("boardId") Long boardId) {
+        System.out.println("Received boardId:::::::::::::::::::::::::::::::::::::: " + boardId);
+
+        Board board = null;
+        try {
+            // 새로운 Photo 객체를 저장합니다.
+            Photo photo = photoService.savePhoto(file);
+
+            // 저장된 Photo 객체의 ID를 Board 객체에 설정합니다.
+            board = boardService.findById(boardId);
+            board.setPhoto(photo);
+
+            // Board 객체를 업데이트합니다.
+            boardService.save(board);
+
+            System.out.println("::::::::::변경 후 이미지 경로:::::::::::::::" + photo.getFilePath());
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return "redirect:/BBelog/update/" + board.getUser().getUsername() + "/" + boardId;
+    }
+
 }
