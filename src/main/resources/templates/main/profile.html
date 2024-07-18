@@ -126,6 +126,10 @@
             width: 100%;
             margin-top: 20px;
         }
+        .board-container img {
+            max-width: 300px;
+            max-height: 180px;
+        }
         .board-card {
             background-color: #f8f9fa;
             border: 1px solid #ccc;
@@ -134,6 +138,8 @@
             width: calc(25% - 20px);
             margin-bottom: 20px;
             box-sizing: border-box;
+            text-align: center;
+
         }
         .board-card h3 {
             font-size: 20px;
@@ -199,6 +205,8 @@
     <div class="board-container">
         <div th:each="board : ${boards}" class="board-card">
             <h3 th:text="${board.title}">제목</h3>
+            <img th:if="${board.getPhoto() == null}" src="https://health.chosun.com/site/data/img_dir/2019/12/20/2019122002474_0.jpg" alt="Example Image">
+            <img th:if="${board.getPhoto() != null}" th:src="@{'/' + ${board.getPhoto().getFilePath()}}" alt="Example Image" >
             <p th:text="${board.content}">내용</p>
             <p class="meta-info">작성일: <span th:text="${#dates.format(board.writeTime, 'yyyy-MM-dd HH:mm')}">2023-01-01</span></p>
             <a th:href="@{/BBelog/profile/{username}/{id}(username=${board.user.username}, id=${board.id})}">자세히 보기</a>

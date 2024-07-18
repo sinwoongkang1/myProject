@@ -103,7 +103,7 @@
             margin-bottom: 10px;
         }
         .post-content {
-            text-align: left;
+            text-align: center;
             font-size: 18px;
             color: #555;
             margin-bottom: 20px;
@@ -210,6 +210,7 @@
         <div class="post-title" th:text="${board.title}">제목</div>
         <img class="contentPhoto" th:if="${board.getPhoto() == null}" src="https://cdn-icons-png.flaticon.com/512/1902/1902960.png" alt="Default Profile Picture">
         <img class="contentPhoto" th:if="${board.getPhoto() != null}" th:src="@{'/' + ${board.getPhoto().getFilePath()}}" alt="ContentPicture">
+        <p></p>
         <div class="post-content" th:text="${board.content}">내용</div>
         <div class="meta-info">♡ <span th:text="${board.liked}">0</span></div>
         <div class="meta-info">작성 : <span th:text="${board.getWriteTime()}">0</span></div>

@@ -161,7 +161,6 @@
 <div class="container">
     <div class="card">
         <h2>글 수정하기</h2>
-
         <form th:action="@{/BBelog/update/{username}/{id} (username=${board.user.username}, id=${board.id})}" method="post">
             <input type="hidden" id="username" name="username" th:value="${session.username}">
             <div class="form-group">
@@ -180,27 +179,7 @@
     </div>
 </div>
 <script>
-    function saveTemporary() {
-        const title = document.getElementById('title').value;
-        const content = document.getElementById('content').value;
-        const username = document.getElementById('username').value;
 
-        fetch('/BBelog/saveTemporary', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ title, content, username }),  // username 포함
-        })
-            .then(response => {
-                if (response.ok) {
-                    window.location.href = '/BBelog/temporary';
-                } else {
-                    alert('임시 저장에 성공했습니다.')
-                    window.location.href = '/BBelog/temporary';
-                }
-            });
-    }
     function confirmLogout(event) {
         event.preventDefault();
         if (confirm("정말 로그아웃 하시겠습니까?")) {

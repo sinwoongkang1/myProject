@@ -16,7 +16,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class PhotoService {
     private final PhotoRepository photoRepository;
-    private final BoardRepository boardRepository;
 
    public Photo savePhoto(MultipartFile file) throws IOException {
        Photo photo = new Photo();

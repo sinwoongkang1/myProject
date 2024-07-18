@@ -52,8 +52,10 @@ public class BoardController {
                 savedBoard.setUser(user);
                 savedBoard.setTitle(board.getTitle());
                 savedBoard.setContent(board.getContent());
+
                 boardService.save(savedBoard);
-                model.addAttribute("board", board);
+
+                model.addAttribute("board", savedBoard);
                 return "redirect:/BBelog/profile";
             }
         } else {

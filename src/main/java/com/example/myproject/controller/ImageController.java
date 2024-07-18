@@ -70,10 +70,9 @@ private final UserService userService;
                                @CookieValue(value = "username", defaultValue = "") String username,
                                @ModelAttribute Board board,
                                Model model) {
-        System.out.println(":::::::::::::::::::::::::::::::::::::::::::::"+file.getOriginalFilename());
-        System.out.println(file.getContentType());
+
         if (username.isEmpty()) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is missing in the cookie");
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 정보 없음");
         }
         try {
             User user = userService.findByUsername(username);
@@ -104,10 +103,10 @@ private final UserService userService;
         }
         return "redirect:/BBelog/write";
     }
-    @GetMapping("/photos/{id}")
-    @ResponseBody
-    public byte[] getContentPhoto(@PathVariable Long id) {
-        Photo photo = photoService.getPhotoById(id);
-        return photo.getData();
-    }
+//    @GetMapping("/photos/{id}")
+//    @ResponseBody
+//    public byte[] getContentPhoto(@PathVariable Long id) {
+//        Photo photo = photoService.getPhotoById(id);
+//        return photo.getData();
+//    }
 }

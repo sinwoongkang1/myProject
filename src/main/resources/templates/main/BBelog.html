@@ -9,7 +9,6 @@
             font-family: Arial, sans-serif;
             margin: auto;
             padding: 0;
-            background: url('https://www.pngitem.com/pimgs/m/105-1052152_before-and-after-silhouettes-before-and-after-weight.png') no-repeat center center fixed;
             background-size: cover;
             position: relative;
         }
@@ -100,9 +99,7 @@
             justify-content: space-between;
             align-items: flex-start;
             margin-top: auto;
-
-            /* 수정된 부분: 프로필 사진과 여백을 맞추기 위해 추가 */
-            margin-left: 60px; /* 프로필 사진의 너비 + 여백만큼 왼쪽으로 이동 */
+            margin-left: 60px;
         }
 
         .card .meta-info span {
@@ -118,9 +115,12 @@
         .card-content {
             display: flex;
             flex-direction: column;
-            height: 100%; /* 카드 내부를 꽉 채우기 위해 추가 */
+            height: 100%;
         }
-
+        .card-content img {
+            max-width: 300px;
+            max-height: 180px;
+        }
         .profile-and-info {
             display: flex;
             justify-content: space-between;
@@ -190,7 +190,8 @@
             <div class="card-content">
                 <h2 th:text="${board.title}">제목</h2>
                 <p th:text="${board.content}">내용</p>
-                <img src="https://health.chosun.com/site/data/img_dir/2019/12/20/2019122002474_0.jpg" alt="Example Image">
+                <img th:if="${board.getPhoto() == null}" src="https://health.chosun.com/site/data/img_dir/2019/12/20/2019122002474_0.jpg" alt="Example Image">
+                <img th:if="${board.getPhoto() != null}" th:src="@{'/' + ${board.getPhoto().getFilePath()}}" alt="Example Image" >
                 <div class="likes">
                     ♡ <span th:text="${board.getLiked()}">0 </span>
                     💬 <span th:text="${board.getComments().size()}">0</span>
