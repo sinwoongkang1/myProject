@@ -161,8 +161,9 @@
 <div class="container">
     <div class="card">
         <h2>글 수정하기</h2>
-        <form th:action="@{/BBelog/update/{username}/{id} (username=${board.user.username}, id=${board.id})}" method="post">
+        <form th:action="@{/BBelog/update/{username}/{id} (username=${board.user.username}, id=${board.id})}" method="post" id="updateForm">
             <input type="hidden" id="username" name="username" th:value="${session.username}">
+            <input type="hidden" name="boardId" th:value="${board.id}">
             <div class="form-group">
                 <label for="title">제목:</label>
                 <input type="text" id="title" name="title" th:value="${board.title}">
@@ -171,20 +172,63 @@
                 <label for="content">내용:</label>
                 <textarea id="content" name="content" rows="4" cols="50" th:text="${board.content}">${board.content}</textarea>
             </div>
+            <div id="uploadPhotoForm">
+                <input type="file" name="file" accept="image/*">
+                <input type="hidden" name="username" th:value="${session.username}">
+                <input type="hidden" name="boardId" th:value="${board.id}">
+                <button type="button" onclick="uploadPhoto()">업로드</button>
+            </div>
             <button class="attach-button" type="button" onclick="window.location.href='http://localhost:8080/BBelog'">홈으로</button>
-            <button class="attach-button" type="button">사진 변경하기</button>
-            <button class="publish-button" type="submit">수정 완료</button>
+            <button class="publish-button" type="submit" form="updateForm">수정 완료</button>
         </form>
-
     </div>
 </div>
-<script>
+</body>
+</html>
 
+
+<script>
     function confirmLogout(event) {
         event.preventDefault();
         if (confirm("정말 로그아웃 하시겠습니까?")) {
             window.location.href = "/BBelog/logout";
         }
+    }
+    function uploadPhoto() {
+        const fileInput = document.querySelector('input[name="file"]');
+        const boardIdInput = document.querySelector('input[name="boardId"]');
+        const usernameInput = document.querySelector('input[name="username"]');
+
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+            const file = fileInput.files[0];
+            const boardId = boardIdInput.value;
+            const username = usernameInput.value;
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("boardId", boardId);
+            formData.append("username", username);
+
+            fetch("/BBelog/changePhoto", {
+                method: "POST",
+                body: formData
+            }).then(response => {
+                if (response.ok) {
+                    console.log("Photo uploaded successfully");
+                    alert("사진이 수정되었습니다");
+                } else {
+                    console.error("Photo upload failed");
+                    alert("사진 업로드에 실패했습니다");
+                }
+            }).catch(error => {
+                console.error("Error during photo upload:", error);
+                alert("사진 업로드 중 오류가 발생했습니다");
+            });
+        } else {
+
+            document.getElementById('updateForm').submit();
+        }
+
     }
 </script>
 

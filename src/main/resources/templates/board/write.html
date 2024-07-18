@@ -163,15 +163,22 @@
       </div>
       <button class="publish-button" type="submit">출간하기</button>
     </form>
-
+    <p></p>
+    <p>- 사진을 업로드 하는 법!!! </p>
+    <p>- 파일 선택 후 업로드를 진행하고 내용을 작성하여 출간해주세요</p>
+    <p>- 업로드 한 사진이 없을 경우 기본 이미지가 생성됩니다.</p>
+    <p>- 임시글은 나중에 출간 후 수정하기를 통해 이미지를 등록해주세요</p>
+    <p></p>
+    <p></p>
     <div id="uploadPhotoForm">
-      <form id="PhotoForm" action="/BBelog/uploadPhoto" method="post" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)">
+      <form id="PhotoForm" action="/BBelog/uploadPhoto" method="post" enctype="multipart/form-data">
         <input type="file" name="file" accept="image/*" required>
         <input type="hidden" name="username" value="${session.username}">
         <button type="submit">업로드</button>
       </form>
+      <p></p>
+      <p></p>
     </div>
-
     <button class="attach-button" type="button" onclick="window.location.href='http://localhost:8080/BBelog'">홈으로</button>
     <button class="attach-button" type="button" onclick="saveTemporary()">임시 저장하기</button>
 
