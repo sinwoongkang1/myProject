@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorry</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: auto;
+            padding: 0;
+            background-size: cover;
+            position: relative;
+        }
+        .header {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header .logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+        .header .right-links {
+            display: flex;
+            align-items: center;
+        }
+        .header .right-links a {
+            margin-left: 10px;
+            background-color: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        .error-content {
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .error-content img {
+            max-width: 20%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .error-content p {
+            font-size: 34px;
+            font-weight: bold;
+            color: #555;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <a href="http://localhost:8080/BBelog" class="logo">BBelog</a>
+    <div class="right-links">
+        <a th:if="${session.username == null}" href="http://localhost:8080/BBelog/join">회원가입</a>
+        <a th:if="${session.username == null}" href="http://localhost:8080/BBelog/login">로그인</a>
+        <a th:if="${session.username != null}" href="http://localhost:8080/BBelog/logout" onclick="confirmLogout(event)">로그아웃</a>
+        <a th:if="${session.username != null}" href="http://localhost:8080/BBelog/profile">내 정보</a>
+    </div>
+</header>
+
+<div class="error-content">
+    <img src="https://cdn-icons-png.flaticon.com/512/6009/6009673.png" alt="Sorry image">
+    <p></p>
+    <p></p>
+    <p>죄송합니다. 꼭 더 좋은 서비스로 보답하겠습니다.</p>
+</div>
+
+<script>
+    function confirmLogout(event) {
+        event.preventDefault();
+        if (confirm("정말 로그아웃 하시겠습니까?")) {
+            window.location.href = "/BBelog/logout";
+        }
+    }
+</script>
+
+</body>
+</html>

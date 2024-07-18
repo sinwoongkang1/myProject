@@ -18,8 +18,11 @@ spring:
       max-request-size: 50MB
       max-file-size: 50MB
 
-
   web:
     resources:
       static-locations: file:/Users/kang/Documents/upload/
 
+
+server:
+  error:
+    path: /error
