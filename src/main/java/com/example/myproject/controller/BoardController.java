@@ -2,7 +2,6 @@ package com.example.myproject.controller;
 
 import com.example.myproject.domain.Board;
 import com.example.myproject.domain.Comment;
-import com.example.myproject.domain.Photo;
 import com.example.myproject.domain.User;
 import com.example.myproject.service.*;
 import jakarta.servlet.http.Cookie;
@@ -11,9 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
