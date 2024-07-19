@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BBelog 홈페이지</title>
+  <title>팔로우 페이지</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -101,8 +101,7 @@
       align-items: flex-start;
       margin-top: auto;
 
-      /* 수정된 부분: 프로필 사진과 여백을 맞추기 위해 추가 */
-      margin-left: 60px; /* 프로필 사진의 너비 + 여백만큼 왼쪽으로 이동 */
+      margin-left: 60px;
     }
 
     .card .meta-info span {
@@ -217,44 +216,6 @@
     if (confirm("정말 로그아웃 하시겠습니까?")) {
       window.location.href = "/BBelog/logout";
     }
-  }
-
-  document.addEventListener("DOMContentLoaded", function () {
-    sortCardsByDate();
-  });
-
-  function sortCardsByDate() {
-    const cardsContainer = document.getElementById('sortedCards');
-    const cards = cardsContainer.querySelectorAll('.card');
-
-    const cardsArray = Array.from(cards);
-
-    cardsArray.sort(function (a, b) {
-      const dateA = new Date(a.querySelector('.meta-info span:nth-child(2)').textContent.trim());
-      const dateB = new Date(b.querySelector('.meta-info span:nth-child(2)').textContent.trim());
-      return dateB - dateA;
-    });
-
-    cardsArray.forEach(function (card) {
-      cardsContainer.appendChild(card);
-    });
-  }
-
-  function sortCardsByPopularity() {
-    const cardsContainer = document.getElementById('sortedCards');
-    const cards = cardsContainer.querySelectorAll('.card');
-
-    const cardsArray = Array.from(cards);
-
-    cardsArray.sort(function (a, b) {
-      const likesA = parseInt(a.querySelector('.likes span').textContent.trim());
-      const likesB = parseInt(b.querySelector('.likes span').textContent.trim());
-      return likesB - likesA;
-    });
-
-    cardsArray.forEach(function (card) {
-      cardsContainer.appendChild(card);
-    });
   }
 </script>
 

@@ -70,12 +70,6 @@
       text-align: left;
       margin-bottom: 10px;
     }
-    .buttons {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      margin-top: 20px;
-    }
     .buttons a {
       padding: 10px 20px;
       background-color: #007BFF;
@@ -150,7 +144,6 @@
 <div class="container">
   <div class="card">
     <h2>글쓰기 페이지</h2>
-
     <form id="publishForm" action="/BBelog/write" method="post">
       <input type="hidden" id="username" name="username" value="${session.username}">
       <div class="form-group">
@@ -165,9 +158,9 @@
     </form>
     <p></p>
     <p>- 사진을 업로드 하는 법!!! </p>
-    <p>- 파일 선택 후 업로드를 진행하고 내용을 작성하여 출간해주세요</p>
+    <p>- 파일 선택 후 업로드를 먼저 진행하고 내용을 작성하여 출간해주세요</p>
     <p>- 업로드 한 사진이 없을 경우 기본 이미지가 생성됩니다.</p>
-    <p>- 임시글은 나중에 출간 후 수정하기를 통해 이미지를 등록해주세요</p>
+    <p>- 임시 글은 나중에 출간 후 수정하기를 통해 이미지를 등록해주세요</p>
     <p></p>
     <p></p>
     <div id="uploadPhotoForm">
@@ -214,25 +207,6 @@
       window.location.href = "/BBelog/logout";
     }
   }
-  // function handleFormSubmit(event) {
-  //   event.preventDefault();
-  //   var form = event.target;
-  //   var formData = new FormData(form);
-  //
-  //   fetch('/BBelog/uploadPhoto', {
-  //     method: 'POST',
-  //     body: formData
-  //   }).then(response => {
-  //     if (!response.ok) {
-  //       throw new Error('Network response was not ok');
-  //     }
-  //     return response.json();
-  //   }).then(data => {
-  //     console.log(data.message);
-  //   }).catch(error => {
-  //     console.error('Error:', error);
-  //   });
-  // }
 </script>
 
 </body>

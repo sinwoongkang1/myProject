@@ -110,8 +110,6 @@
         <h2>회원 정보 수정</h2>
         <div th:if="${error}">
         </div>
-
-
         <form id="updateForm" action="/BBelog/editUser" method="post" onsubmit="showPopupAndRedirect(event, 'update')">
             <div class="form-group">
                 <label for="email">변경할 이메일:</label>
@@ -134,14 +132,11 @@
                 <button type="submit">변경하기</button>
             </div>
         </form>
-
         <form id="withdrawForm" action="/BBelog/withdraw" method="post" onsubmit="showPopupAndRedirect(event, 'withdraw')">
             <div class="form-group">
                 <button type="submit">탈퇴하기</button>
             </div>
         </form>
-
-
         <div class="form-group">
             <button class="attach-button" type="button" onclick="window.location.href='http://localhost:8080/BBelog'">홈으로</button>
         </div>
