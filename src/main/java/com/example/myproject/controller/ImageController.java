@@ -15,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -41,17 +40,13 @@ private final UserService userService;
             User user = userService.findByUsername(username);
             String filePath = "images/" + image.getFileName();
             image.setFilePath(filePath);
-
-
             String uploadDir = new File("src/main/resources/static/images").getAbsolutePath();
             file.transferTo(new File(uploadDir + "/" + image.getFileName()));
-
             user.setProfileImage(image);
             userService.saveUser(user);
             model.addAttribute("user", user);
             ResponseEntity.status(HttpStatus.OK).body(filePath);
             return "redirect:/BBelog/profile/";
-
         } catch (IOException e) {
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload profile picture");
         }
@@ -63,62 +58,44 @@ private final UserService userService;
                                @CookieValue(value = "username", defaultValue = "") String username,
                                @ModelAttribute Board board,
                                Model model) {
-
         if (username.isEmpty()) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 정보 없음");
         }
         try {
             User user = userService.findByUsername(username);
             Photo photo = photoService.savePhoto(file);
-
             board.setPhoto(photo);
             board.setTitle("temporary");
             board.setContent("temporary");
             board.setUser(user);
             boardService.save(board);
-
-
             String filePath = "photos/" + photo.getFileName();
             photo.setFilePath(filePath);
-
-
             String uploadDir = new File("photos").getAbsolutePath();
             file.transferTo(new File(uploadDir + "/" + photo.getFileName()));
-
             board.setPhoto(photo);
             boardService.save(board);
             model.addAttribute("board", board);
             ResponseEntity.status(HttpStatus.OK).body(filePath);
             return "redirect:/BBelog/write";
-
         } catch (IOException e) {
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload profile picture");
         }
         return "redirect:/BBelog/write";
     }
+
     @PostMapping("/changePhoto")
     public String changePhoto(@RequestParam("file") MultipartFile file,
                               @RequestParam("boardId") Long boardId) {
-        System.out.println("Received boardId:::::::::::::::::::::::::::::::::::::: " + boardId);
-
         Board board = null;
         try {
-            // 새로운 Photo 객체를 저장합니다.
             Photo photo = photoService.savePhoto(file);
-
-            // 저장된 Photo 객체의 ID를 Board 객체에 설정합니다.
             board = boardService.findById(boardId);
             board.setPhoto(photo);
-
-            // Board 객체를 업데이트합니다.
             boardService.save(board);
-
-            System.out.println("::::::::::변경 후 이미지 경로:::::::::::::::" + photo.getFilePath());
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         return "redirect:/BBelog/update/" + board.getUser().getUsername() + "/" + boardId;
     }
 

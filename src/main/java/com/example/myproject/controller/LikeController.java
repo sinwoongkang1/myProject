@@ -20,24 +20,19 @@ public class LikeController {
     private final BoardService boardService;
     private final LikeService likeService;
 
-
     @PostMapping("/profile/{username}/{id}")
     public String likeBoard(@CookieValue(value = "username", defaultValue = "") String loggedInUsername,
                             @PathVariable String username,
                             @PathVariable Long id) {
-
         if (loggedInUsername.isEmpty()) {
             return "redirect:/BBelog/login";
         }
         User user2 = userService.findUserByUsername(loggedInUsername);
         User user = userService.findUserByUsername(username);
         Board board = boardService.findById(id);
-
         List<Long> likedUsers = likeService.getUserIdsByBoardId(id);
-
         int userCount = user.getLiked();
         int boardCount = board.getLiked();
-
         if (!likedUsers.contains(user2.getId())) {
             user.setLiked(++userCount);
             board.setLiked(++boardCount);
@@ -63,6 +58,4 @@ public class LikeController {
         model.addAttribute("boards", boards);
         return "board/likesboards";
     }
-
-
 }

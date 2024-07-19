@@ -23,11 +23,12 @@ public class BoardController {
     private final UserService userService;
     private final CommentService commentService;
     private final LikeService likeService;
-    private final PhotoService photoService;
+
     @GetMapping("/write")
     public String write() {
         return "/board/write";
     }
+
     @PostMapping("/write")
     public String write(@ModelAttribute Board board, HttpServletRequest request,Model model) {
         Cookie[] cookies = request.getCookies();
@@ -51,9 +52,7 @@ public class BoardController {
                 savedBoard.setUser(user);
                 savedBoard.setTitle(board.getTitle());
                 savedBoard.setContent(board.getContent());
-
                 boardService.save(savedBoard);
-
                 model.addAttribute("board", savedBoard);
                 return "redirect:/BBelog/profile";
             }
@@ -61,6 +60,7 @@ public class BoardController {
             return "redirect:/BBelog/profile";
         }
     }
+
     @PostMapping("/saveTemporary")
     public String saveTemporary(@RequestBody Board board, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
@@ -86,6 +86,7 @@ public class BoardController {
             return "redirect:/BBelog/login";
         }
     }
+
     @GetMapping("/temporary")
     public String getTemporaryBoards(Model model, @CookieValue(value = "username", defaultValue = "") String username) {
         if (username.isEmpty()) {
@@ -98,6 +99,7 @@ public class BoardController {
         model.addAttribute("boards", temporaryBoards);
         return "/temporary/temporary_list";
     }
+
     @GetMapping("/profile/{username}/{id}")
     public String profile(@PathVariable String username, @PathVariable Long id,
                           @CookieValue(value = "username", defaultValue = "") String cookieUsername,
@@ -115,6 +117,7 @@ public class BoardController {
             return "/board/board_writed";
         }
     }
+
     @PostMapping("/delete/{username}/{id}")
     public String deletePost(@PathVariable String username, @PathVariable Long id, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
@@ -138,6 +141,7 @@ public class BoardController {
         }
         return "redirect:/BBelog";
     }
+
     @GetMapping("/update/{username}/{id}")
     public String updatePost(@PathVariable String username, @PathVariable Long id, Model model) {
         User user = userService.findUserByUsername(username);
@@ -147,6 +151,7 @@ public class BoardController {
         model.addAttribute("board", board);
         return "/board/edit";
     }
+
     @PostMapping("/update/{username}/{id}")
     public String update(@PathVariable String username,
                          @PathVariable Long id,
@@ -161,6 +166,7 @@ public class BoardController {
         }
         return "redirect:/BBelog";
     }
+
     @GetMapping("/temporary/{username}/{id}")
     public String temporary(@PathVariable String username, @PathVariable Long id, Model model) {
         User user = userService.findUserByUsername(username);
@@ -170,6 +176,7 @@ public class BoardController {
         model.addAttribute("board", board);
         return "/temporary/wirted_temporary";
     }
+
     @PostMapping("/temporary/delete/{username}/{id}")
     public String temporaryDelete(@PathVariable String username, @PathVariable Long id, Model model) {
         User user = userService.findUserByUsername(username);
@@ -179,6 +186,7 @@ public class BoardController {
         }
         return "redirect:/BBelog/temporary";
     }
+
     @GetMapping("/temporary/update/{username}/{id}")
     public String temporaryUpdate(@PathVariable String username, @PathVariable Long id, Model model) {
         Board board = boardService.findByUsernameAndBoardIdAndTemporaryTrue(username, id);
@@ -188,6 +196,7 @@ public class BoardController {
         model.addAttribute("board", board);
         return "/temporary/temporary_edit";
     }
+
     @PostMapping("/temporary/update/{username}/{id}")
     public String temporaryUpdate(@PathVariable String username,
                                   @PathVariable Long id,
@@ -202,6 +211,7 @@ public class BoardController {
         }
         return "redirect:/BBelog/temporary";
     }
+
     @PostMapping("/temporary/push/{username}/{id}")
     public String temporaryPush(@PathVariable String username,
                                 @PathVariable String id,

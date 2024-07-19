@@ -28,7 +28,4 @@ public class Photo {
     @Column(name = "data", columnDefinition="LONGBLOB")
     private byte[] data;
 
-    public Photo(String string) {
-        this.filePath = string;
-    }
 }

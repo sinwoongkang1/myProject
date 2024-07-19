@@ -25,8 +25,6 @@ public class UserController {
     private final UserService userService;
     private final AdminService adminService;
     private final BoardService boardService;
-    private final LikeService likeService;
-    private final CommentService commentService;
 
     @GetMapping
     public String BBelogIndex(Model model) {
@@ -101,12 +99,14 @@ public class UserController {
         model.addAttribute("cal", cal);
         return "/main/profile";
     }
+
     @GetMapping("/editUser")
     public String editUser(Model model, @CookieValue(value = "username", defaultValue = "") String username) {
         User user = userService.findUserByUsername(username);
         model.addAttribute("user", user);
         return "/main/editUser";
     }
+
     @PostMapping("/editUser")
     public String editUser(@ModelAttribute User user,
                            @CookieValue(value = "username", defaultValue = "") String username) {
@@ -117,6 +117,7 @@ public class UserController {
         userService.saveUser(user1);
         return "redirect:/BBelog/profile";
     }
+
     @PostMapping("/withdraw")
     public String withdraw(@ModelAttribute User user,
                            @CookieValue(value = "username", defaultValue = "") String username) {

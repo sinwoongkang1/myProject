@@ -23,9 +23,4 @@ public class PhotoService {
        photo.setData(file.getBytes());
        return photoRepository.save(photo);
    }
-
-   public Photo getPhotoById(Long id) {
-       return photoRepository.findById(id).orElse(null);
-   }
-
 }

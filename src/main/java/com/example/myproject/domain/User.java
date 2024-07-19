@@ -51,10 +51,10 @@ public class User {
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL)
-    private List<Following> following; //내가 팔로잉 하는 사람
+    private List<Following> following;
 
     @OneToMany(mappedBy = "followee", cascade = CascadeType.ALL)
-    private List<Following> followers; //나를 팔로우 하는 사람
+    private List<Following> followers;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Admin adminDetails;

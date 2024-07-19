@@ -27,15 +27,18 @@ public class LikeService {
     public List<Long> getUserIdsByBoardId(Long boardId) {
         return likeRepository.getUserIdsByBoardId(boardId);
     }
+
     public void unlikeBoard(User user, Board board) {
         Liked liked = likeRepository.findByUserAndBoard(user, board);
         if (liked != null) {
             likeRepository.delete(liked);
         }
     }
+
     public List<Board> getBoardsLikedByUser(Long userId) {
         return likeRepository.findBoardsLikedByUser(userId);
     }
+
     @Transactional
     public void deleteAllLikedByBoard(Board board) {
         likeRepository.deleteAllByBoard(board);

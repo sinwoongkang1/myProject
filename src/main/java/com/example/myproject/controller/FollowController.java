@@ -14,11 +14,9 @@ import java.util.List;
 public class FollowController {
     private final FollowService followService;
 
-
     @GetMapping("/following")
     public String getFollowedUserBoards(Model model,
                                         @CookieValue(value = "username", defaultValue = "") String loggedInUsername) {
-
         if (!loggedInUsername.isEmpty()) {
             List<Board> boards = followService.getFollowedUserBoards(loggedInUsername);
             model.addAttribute("boards", boards);

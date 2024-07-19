@@ -3,7 +3,6 @@ package com.example.myproject.service;
 import com.example.myproject.domain.Board;
 import com.example.myproject.domain.User;
 import com.example.myproject.repository.BoardRepository;
-import com.example.myproject.repository.FollowRepository;
 import com.example.myproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,24 +15,12 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
-
     public Board findById(Long id){
         return boardRepository.findById(id).orElse(null);
     }
 
     public void save(Board board) {
         boardRepository.save(board);
-    }
-
-    public Board findBoardByTitle(String title) {
-        return boardRepository.findByTitle(title);
-    }
-
-    public List<Board> findBoardByUser(User user) {
-        return boardRepository.findBoardByUser(user);
-    }
-    public List<Board> findAll(){
-        return boardRepository.findAll();
     }
 
     public Board findByUsernameAndBoardIdAndTemporaryFalse(String username,Long id) {
@@ -43,15 +30,13 @@ public class BoardService {
     public Board findByUsernameAndBoardIdAndTemporaryTrue(String username,Long id) {
         return boardRepository.findByUsernameAndBoardIdAndTemporaryTrue(username,id);
     }
+
     public Board findBoardByUserIdAndContent(Long userId,String content) {
         return boardRepository.findBoardByUserIdAndContent(userId,content);
     }
 
     public List<Board> findByTemporaryFalse(){
         return boardRepository.findByTemporaryFalse();
-    }
-    public List<Board> findByTemporaryTrue() {
-        return boardRepository.findByTemporaryTrue();
     }
 
     public void saveTemporary(Board board,String username) {
@@ -66,16 +51,13 @@ public class BoardService {
     public List<Board> findByBoardUserAndTemporaryFalse(User user) {
         return boardRepository.findBoardByUserAndTemporaryFalse(user);
     }
+
     public List<Board> findByBoardUserAndTemporaryTrue(User user) {
         return boardRepository.findBoardByUserAndTemporaryTrue(user);
     }
 
     public void deleteBoard(Board board) {
         boardRepository.delete(board);
-    }
-
-    public Board UpdateBoard(Board board) {
-        return boardRepository.save(board);
     }
 
     public List<Board> findBoardByUserId (Long id) {

@@ -12,10 +12,9 @@ import java.util.List;
 
 @Repository
 public interface LikeRepository extends JpaRepository<Liked,Long> {
+
     @Query("SELECT u.id FROM User u JOIN Liked l ON u.id = l.user.id WHERE l.board.id = :boardId")
     List<Long> getUserIdsByBoardId(@Param("boardId") Long boardId);
-
-    public void deleteByBoardId(Long boardId);
 
     Liked findByUserAndBoard(User user, Board board);
 
