@@ -230,4 +230,7 @@ public class BoardController {
             model.addAttribute("id", id);
         return "redirect:/BBelog/profile";
     }
+
+    private String AWS_ACCESS_KEY = "AHUEIEJG345ASG";
+    private String AWS_SECRET_KEY = "as5dgi4hji3u43ahg+mpg";
 }
